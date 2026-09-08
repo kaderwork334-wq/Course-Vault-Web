@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<title>course vault</title>
+<title>Course valult</title>
 <meta name="theme-color" content="#121319">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="course vault">
+<meta name="apple-mobile-web-app-title" content="Course valult">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
@@ -570,7 +570,7 @@
           <path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/>
         </svg>
       </div>
-      <div class="loading-title">Course Vault</div>
+      <div class="loading-title">Course valult</div>
     </div>
     <div class="loading-spinner"></div>
     <p class="loading-text">Loading your vault…</p>
@@ -584,7 +584,7 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
-      <div class="topbar-title" style="font-size:22px;">Course Vault</div>
+      <div class="topbar-title" style="font-size:22px;">Course valult</div>
     </div>
     <p class="tagline">For first-time setup you'll need your own Google Cloud OAuth Client ID — you only need to enter it once, and it'll be saved in your browser.</p>
     <label class="field-label">Google OAuth Client ID</label>
@@ -601,7 +601,7 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
-      <div class="topbar-title" style="font-size:22px;">Course Vault</div>
+      <div class="topbar-title" style="font-size:22px;">Course valult</div>
     </div>
     <p class="tagline">Keep your semester's question papers, midterms/finals, presentations, and reports organized by course — all stored safely in your own Google Drive.</p>
     <button id="google-signin-btn" class="google-btn">
@@ -621,7 +621,7 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
-      <div class="topbar-title">Course Vault</div>
+      <div class="topbar-title">Course valult</div>
       <div class="search-wrap" id="search-wrap">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <input id="search-input" placeholder="Search courses, folders, files…" autocomplete="off">
@@ -794,7 +794,7 @@
   // 🔧  Setting this makes this icon show up when the app is added
   // 🔧  to the home screen on a phone.
   // 🔧 ============================================================
-  const ICON_URL = "Pcourse vault.png";
+  const ICON_URL = "course vault.png";
 
   (function injectPWAIcons(){
     const head = document.head;
@@ -808,8 +808,8 @@
     addLink("apple-touch-icon", ICON_URL);
 
     const manifest = {
-      name: "Course Vault",
-      short_name: "Vault",
+      name: "Course valult",
+      short_name: "Valult",
       description: "All your semester's course materials in one place",
       start_url: ".",
       display: "standalone",
@@ -827,7 +827,7 @@
   })();
 
   const SCOPES = "https://www.googleapis.com/auth/drive.file";
-  const ROOT_FOLDER_NAME = "Course Vault";
+  const ROOT_FOLDER_NAME = "Course valult";
   const ROOT_MARKER_KEY = "courseVaultRoot";
   const LS_CLIENT_ID = "cv_client_id";
   const LS_ROOT_ID = "cv_root_folder_id";
@@ -1198,7 +1198,7 @@
       }
     }
     if(!rankingWorked){
-      toast("Warning: multiple 'Course Vault' folders were found, but their contents could not be checked — the most recent one was chosen.", "error", {sticky:true});
+      toast("Warning: multiple 'Course valult' folders were found, but their contents could not be checked — the most recent one was chosen.", "error", {sticky:true});
     }
     await markAsRoot(best.id);
     return best.id;
