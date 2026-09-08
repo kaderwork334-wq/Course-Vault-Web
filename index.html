@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -308,7 +308,7 @@
 
 <!-- ============ LOADING ============ -->
 <div id="loading-screen" class="loading-shell">
-  <div class="spinner"></div><span>লোড হচ্ছে…</span>
+  <div class="spinner"></div><span>Loading…</span>
 </div>
 
 <!-- ============ SETUP SCREEN (first run — needs Google Client ID) ============ -->
@@ -318,13 +318,13 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
-      <div class="topbar-title" style="font-size:22px;">কোর্স ভান্ডার</div>
+      <div class="topbar-title" style="font-size:22px;">Course Vault</div>
     </div>
-    <p class="tagline">প্রথমবার সেটাপ করতে তোমার নিজের Google Cloud OAuth Client ID লাগবে — এটা একবারই দিতে হবে, তোমার ব্রাউজারে সেভ থাকবে।</p>
+    <p class="tagline">For first-time setup you'll need your own Google Cloud OAuth Client ID — you only need to enter it once, and it'll be saved in your browser.</p>
     <label class="field-label">Google OAuth Client ID</label>
     <input id="setup-client-id" class="text-input" placeholder="xxxxxxxxxx.apps.googleusercontent.com" autocomplete="off">
-    <button id="setup-save-btn" class="btn btn-primary btn-block" style="margin-top:16px;">সেভ করে এগিয়ে যাও</button>
-    <p class="help-text">Client ID কোথায় পাবে জানো না? নিচে ধাপে ধাপে গাইড দেওয়া আছে (README দ্রষ্টব্য)। সংক্ষেপে: <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → নতুন প্রজেক্ট → Google Drive API চালু করো → OAuth Client ID (Web application) বানাও → এই পেজের ঠিকানাটা Authorized JavaScript origins-এ যোগ করো।</p>
+    <button id="setup-save-btn" class="btn btn-primary btn-block" style="margin-top:16px;">Save and continue</button>
+    <p class="help-text">Don't know where to get a Client ID? A step-by-step guide is available below (see README). In short: <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → create a new project → enable the Google Drive API → create an OAuth Client ID (Web application) → add this page's address to Authorized JavaScript origins.</p>
   </div>
 </div>
 
@@ -335,15 +335,15 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
-      <div class="topbar-title" style="font-size:22px;">কোর্স ভান্ডার</div>
+      <div class="topbar-title" style="font-size:22px;">Course Vault</div>
     </div>
-    <p class="tagline">সেমিস্টারের প্রশ্ন, মিড-ফাইনাল, প্রেজেন্টেশন, রিপোর্ট — সব কোর্স অনুযায়ী গুছিয়ে রাখো, নিজের Google Drive-এই জমা থাকবে।</p>
+    <p class="tagline">Keep semester question papers, midterms & finals, presentations, and reports organized by course — all stored right in your own Google Drive.</p>
     <button id="google-signin-btn" class="google-btn">
       <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.4C29.6 35.4 26.9 36.3 24 36.3c-5.2 0-9.6-3.3-11.2-7.9l-6.6 5.1C9.6 39.7 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.6 5.4C41.6 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
-      Google দিয়ে সাইন ইন করো
+      Sign in with Google
     </button>
     <p class="help-text" style="text-align:center;margin-top:16px;">
-      <button class="link-btn" id="change-client-id-link">Client ID পাল্টাতে চাও?</button>
+      <button class="link-btn" id="change-client-id-link">Want to change the Client ID?</button>
     </p>
   </div>
 </div>
@@ -355,12 +355,12 @@
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
-      <div class="topbar-title">কোর্স ভান্ডার</div>
+      <div class="topbar-title">Course Vault</div>
     </div>
     <div class="topbar-right">
       <div class="user-chip" id="user-chip">
         <img id="user-avatar" src="" alt="">
-        <span id="user-name">সাইন আউট</span>
+        <span id="user-name">Sign out</span>
       </div>
     </div>
   </header>
@@ -370,15 +370,15 @@
     <div class="toolbar">
       <button class="btn btn-primary" id="btn-new-folder">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-        <span id="new-folder-label">নতুন কোর্স</span>
+        <span id="new-folder-label">New Course</span>
       </button>
       <button class="btn btn-ghost" id="btn-camera">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.3" stroke="currentColor" stroke-width="1.8"/></svg>
-        ক্যামেরা দিয়ে তোলো
+        Take Photo
       </button>
       <button class="btn btn-ghost" id="btn-upload">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        ফাইল আপলোড
+        Upload File
       </button>
     </div>
     <div id="grid" class="grid"></div>
@@ -392,12 +392,12 @@
 <!-- New folder modal -->
 <div class="modal-overlay" id="modal-folder">
   <div class="modal">
-    <h3 id="folder-modal-title">নতুন কোর্স যোগ করো</h3>
-    <label class="field-label">নাম</label>
-    <input class="text-input" id="folder-name-input" placeholder="যেমনঃ MIS442 অথবা Mid Term">
+    <h3 id="folder-modal-title">Add New Course</h3>
+    <label class="field-label">Name</label>
+    <input class="text-input" id="folder-name-input" placeholder="e.g. MIS442 or Mid Term">
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="folder-cancel">বাতিল</button>
-      <button class="btn btn-primary" id="folder-confirm">তৈরি করো</button>
+      <button class="btn btn-ghost" id="folder-cancel">Cancel</button>
+      <button class="btn btn-primary" id="folder-confirm">Create</button>
     </div>
   </div>
 </div>
@@ -405,12 +405,12 @@
 <!-- Rename modal -->
 <div class="modal-overlay" id="modal-rename">
   <div class="modal">
-    <h3>নাম পরিবর্তন করো</h3>
-    <label class="field-label">নতুন নাম</label>
-    <input class="text-input" id="rename-input" placeholder="নতুন নাম লেখো">
+    <h3>Rename</h3>
+    <label class="field-label">New name</label>
+    <input class="text-input" id="rename-input" placeholder="Enter new name">
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="rename-cancel">বাতিল</button>
-      <button class="btn btn-primary" id="rename-confirm">সেভ করো</button>
+      <button class="btn btn-ghost" id="rename-cancel">Cancel</button>
+      <button class="btn btn-primary" id="rename-confirm">Save</button>
     </div>
   </div>
 </div>
@@ -418,11 +418,11 @@
 <!-- Delete confirm modal -->
 <div class="modal-overlay" id="modal-delete">
   <div class="modal">
-    <h3 id="delete-title">ডিলিট করবে?</h3>
+    <h3 id="delete-title">Delete?</h3>
     <p style="color:var(--muted);font-size:14px;margin:0 0 4px;" id="delete-body"></p>
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="delete-cancel">বাতিল</button>
-      <button class="btn btn-danger" id="delete-confirm">ডিলিট করো</button>
+      <button class="btn btn-ghost" id="delete-cancel">Cancel</button>
+      <button class="btn btn-danger" id="delete-confirm">Delete</button>
     </div>
   </div>
 </div>
@@ -434,11 +434,11 @@
   "use strict";
 
   // 🔧 ============================================================
-  // 🔧  এখানে তোমার PWA আইকনের সরাসরি ছবির লিংক (URL) বসাও।
-  // 🔧  কমপক্ষে 512x512 px সাইজের PNG/JPG হলে সবচেয়ে ভালো দেখাবে।
-  // 🔧  এটা বসালে ফোনে "Add to Home Screen" করলে এই আইকনটা দেখাবে।
+  // 🔧  Put the direct image URL for your PWA icon here.
+  // 🔧  A PNG/JPG of at least 512x512 px looks best.
+  // 🔧  Once set, this icon will show up when "Add to Home Screen" is used.
   // 🔧 ============================================================
-  const ICON_URL = "Pcourse vault.png";
+  const ICON_URL = "course vault.png";
 
   (function injectPWAIcons(){
     const head = document.head;
@@ -452,9 +452,9 @@
     addLink("apple-touch-icon", ICON_URL);
 
     const manifest = {
-      name: "কোর্স ভান্ডার",
-      short_name: "ভান্ডার",
-      description: "সেমিস্টারের সব কোর্স ম্যাটেরিয়াল এক জায়গায়",
+      name: "Course Vault",
+      short_name: "Vault",
+      description: "All your semester course materials in one place",
       start_url: ".",
       display: "standalone",
       background_color: "#121319",
@@ -471,7 +471,7 @@
   })();
 
   const SCOPES = "https://www.googleapis.com/auth/drive.file";
-  const ROOT_FOLDER_NAME = "Course Bhandar";
+  const ROOT_FOLDER_NAME = "Course Vault";
   const ROOT_MARKER_KEY = "courseVaultRoot";
   const LS_CLIENT_ID = "cv_client_id";
   const LS_ROOT_ID = "cv_root_folder_id";
@@ -566,7 +566,7 @@
   function fmtDate(iso){
     if(!iso) return "";
     const d = new Date(iso);
-    return d.toLocaleDateString("bn-BD", {day:"numeric", month:"short", year:"numeric"});
+    return d.toLocaleDateString("en-US", {day:"numeric", month:"short", year:"numeric"});
   }
 
   // ---------- Google Identity / token handling ----------
@@ -582,7 +582,7 @@
         clearInterval(iv); cb();
       } else if(tries > 100){
         clearInterval(iv);
-        toast("Google লগইন সিস্টেম লোড হতে সমস্যা হচ্ছে, ইন্টারনেট চেক করো ও পেজ রিলোড দাও", "error", {sticky:true});
+        toast("Trouble loading the Google sign-in system — check your internet connection and reload the page", "error", {sticky:true});
       }
     }, 100);
   }
@@ -594,7 +594,7 @@
       callback: (resp)=>{
         if(resp.error){
           if(signInResolver) signInResolver.reject(resp);
-          toast("সাইন ইন ব্যর্থ হয়েছে: " + resp.error, "error");
+          toast("Sign-in failed: " + resp.error, "error");
           return;
         }
         state.accessToken = resp.access_token;
@@ -702,11 +702,11 @@
         });
         if(!initRes.ok){
           const t = await initRes.text().catch(()=> "");
-          reject(new Error("আপলোড শুরু করা যায়নি: " + t));
+          reject(new Error("Couldn't start the upload: " + t));
           return;
         }
         const location = initRes.headers.get("Location");
-        if(!location){ reject(new Error("আপলোড সেশন তৈরি হয়নি")); return; }
+        if(!location){ reject(new Error("Upload session was not created")); return; }
 
         const xhr = new XMLHttpRequest();
         xhr.open("PUT", location, true);
@@ -719,10 +719,10 @@
             try{ resolve(JSON.parse(xhr.responseText)); }
             catch(e){ resolve({name:file.name}); }
           } else {
-            reject(new Error(`আপলোড ব্যর্থ (${xhr.status})`));
+            reject(new Error(`Upload failed (${xhr.status})`));
           }
         };
-        xhr.onerror = ()=> reject(new Error("নেটওয়ার্ক সমস্যায় আপলোড ব্যর্থ হয়েছে"));
+        xhr.onerror = ()=> reject(new Error("Upload failed due to a network problem"));
         xhr.send(file);
       } catch(err){
         reject(err);
@@ -776,7 +776,7 @@
       }
     }
     if(!rankingWorked){
-      toast("সতর্কতা: একাধিক 'Course Bhandar' ফোল্ডার পাওয়া গেছে কিন্তু কোনটায় কী আছে তা যাচাই করা যায়নি — সাম্প্রতিকতমটা বেছে নেওয়া হয়েছে।", "error", {sticky:true});
+      toast("Warning: multiple 'Course Vault' folders were found, but we couldn't check what's inside each — the most recent one was chosen.", "error", {sticky:true});
     }
     await markAsRoot(best.id);
     return best.id;
@@ -795,7 +795,7 @@
       }
     } catch(e){
       console.warn("course-vault: driveFindRootFolder failed", e);
-      toast("ভান্ডার খুঁজতে সমস্যা হয়েছে: " + e.message, "error", {sticky:true});
+      toast("Trouble finding the vault: " + e.message, "error", {sticky:true});
     }
 
     if(state.rootFolderId){
@@ -822,7 +822,7 @@
     bc.innerHTML = "";
     const home = document.createElement("span");
     home.className = "crumb" + (state.pathStack.length===0 ? " current" : "");
-    home.textContent = "সব কোর্স";
+    home.textContent = "All Courses";
     home.onclick = ()=>{ if(state.pathStack.length){ state.pathStack = []; loadCurrent(); } };
     bc.appendChild(home);
 
@@ -842,7 +842,7 @@
       bc.appendChild(c);
     });
 
-    el("new-folder-label").textContent = state.pathStack.length === 0 ? "নতুন কোর্স" : "নতুন ফোল্ডার";
+    el("new-folder-label").textContent = state.pathStack.length === 0 ? "New Course" : "New Folder";
   }
 
   function closePopover(){
@@ -861,8 +861,8 @@
       const atRoot = state.pathStack.length === 0;
       empty.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#9B9788" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <h3>${atRoot ? "এখনো কোনো কোর্স যোগ করা হয়নি" : "এই ফোল্ডার এখনো খালি"}</h3>
-        <p>${atRoot ? "উপরের \u201cনতুন কোর্স\u201d বাটনে চাপ দিয়ে শুরু করো" : "ফোল্ডার বানাও অথবা ছবি/ফাইল আপলোড করো"}</p>
+        <h3>${atRoot ? "No courses added yet" : "This folder is empty"}</h3>
+        <p>${atRoot ? "Tap the \u201cNew Course\u201d button above to get started" : "Create a folder or upload a photo/file"}</p>
       `;
       return;
     }
@@ -931,20 +931,20 @@
     pop.style.left = Math.max(8, rect.right - 150) + "px";
 
     const renameBtn = document.createElement("button");
-    renameBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10-10-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> নাম বদলাও`;
+    renameBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10-10-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> Rename`;
     renameBtn.onclick = ()=>{ closePopover(); openRenameModal(item); };
     pop.appendChild(renameBtn);
 
     if(!isFolder){
       const openBtn = document.createElement("button");
-      openBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4L10 14M6 6H5a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Drive-এ খোলো`;
+      openBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4L10 14M6 6H5a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Open in Drive`;
       openBtn.onclick = ()=>{ closePopover(); window.open(item.webViewLink, "_blank"); };
       pop.appendChild(openBtn);
     }
 
     const delBtn = document.createElement("button");
     delBtn.className = "danger";
-    delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0v13a1 1 0 001 1h8a1 1 0 001-1V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> ডিলিট করো`;
+    delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0v13a1 1 0 001 1h8a1 1 0 001-1V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> Delete`;
     delBtn.onclick = ()=>{ closePopover(); openDeleteModal(item, isFolder); };
     pop.appendChild(delBtn);
 
@@ -959,19 +959,19 @@
     grid.innerHTML = "";
     el("empty-state").style.display = "none";
     grid.style.display = "grid";
-    grid.innerHTML = `<div class="loading-shell" style="grid-column:1/-1;min-height:120px;"><div class="spinner"></div><span>লোড হচ্ছে…</span></div>`;
+    grid.innerHTML = `<div class="loading-shell" style="grid-column:1/-1;min-height:120px;"><div class="spinner"></div><span>Loading…</span></div>`;
     try{
       const items = await driveListChildren(currentFolderId());
       renderGrid(items);
     } catch(err){
       grid.innerHTML = "";
-      toast("তালিকা লোড করতে সমস্যা হয়েছে: " + err.message, "error", {sticky:true});
+      toast("Trouble loading the list: " + err.message, "error", {sticky:true});
     }
   }
 
   // ---------- modals: new folder ----------
   function openNewFolderModal(){
-    el("folder-modal-title").textContent = state.pathStack.length===0 ? "নতুন কোর্স যোগ করো" : "নতুন ফোল্ডার বানাও";
+    el("folder-modal-title").textContent = state.pathStack.length===0 ? "Add New Course" : "Create New Folder";
     el("folder-name-input").value = "";
     el("modal-folder").classList.add("show");
     setTimeout(()=> el("folder-name-input").focus(), 50);
@@ -983,17 +983,17 @@
   el("folder-name-input").addEventListener("keydown", (e)=>{ if(e.key==="Enter") el("folder-confirm").click(); });
   el("folder-confirm").onclick = async ()=>{
     const name = el("folder-name-input").value.trim();
-    if(!name){ toast("একটা নাম দাও", "error"); return; }
+    if(!name){ toast("Please enter a name", "error"); return; }
     closeNewFolderModal();
-    const t = toast("ফোল্ডার তৈরি হচ্ছে…", null, {sticky:true});
+    const t = toast("Creating folder…", null, {sticky:true});
     try{
       await driveCreateFolder(name, currentFolderId());
       t.remove();
-      toast("তৈরি হয়ে গেছে ✓", "success");
+      toast("Created ✓", "success");
       loadCurrent();
     } catch(err){
       t.remove();
-      toast("ফোল্ডার তৈরি করা যায়নি: " + err.message, "error", {sticky:true});
+      toast("Couldn't create the folder: " + err.message, "error", {sticky:true});
     }
   };
 
@@ -1009,21 +1009,21 @@
   el("rename-confirm").onclick = async ()=>{
     const item = el("modal-rename")._item;
     const newName = el("rename-input").value.trim();
-    if(!newName){ toast("একটা নাম দাও", "error"); return; }
+    if(!newName){ toast("Please enter a name", "error"); return; }
     el("modal-rename").classList.remove("show");
     try{
       await driveRename(item.id, newName);
-      toast("নাম পরিবর্তন হয়েছে ✓", "success");
+      toast("Renamed ✓", "success");
       loadCurrent();
     } catch(err){
-      toast("নাম বদলানো যায়নি: " + err.message, "error", {sticky:true});
+      toast("Couldn't rename: " + err.message, "error", {sticky:true});
     }
   };
 
   // ---------- modals: delete ----------
   function openDeleteModal(item, isFolder){
-    el("delete-title").textContent = isFolder ? "ফোল্ডার ডিলিট করবে?" : "ফাইল ডিলিট করবে?";
-    el("delete-body").textContent = `"${item.name}" ${isFolder ? "এবং এর ভিতরের সবকিছু" : ""} ডিলিট হয়ে যাবে (Google Drive-এর ট্র্যাশে যাবে)।`;
+    el("delete-title").textContent = isFolder ? "Delete folder?" : "Delete file?";
+    el("delete-body").textContent = `"${item.name}" ${isFolder ? "and everything inside it" : ""} will be deleted (moved to Google Drive's trash).`;
     el("modal-delete").classList.add("show");
     el("modal-delete")._item = item;
   }
@@ -1033,10 +1033,10 @@
     el("modal-delete").classList.remove("show");
     try{
       await driveDelete(item.id);
-      toast("ডিলিট করা হয়েছে ✓", "success");
+      toast("Deleted ✓", "success");
       loadCurrent();
     } catch(err){
-      toast("ডিলিট করা যায়নি: " + err.message, "error", {sticky:true});
+      toast("Couldn't delete: " + err.message, "error", {sticky:true});
     }
   };
 
@@ -1049,7 +1049,7 @@
     if(files.length === 0) return;
     const parentId = currentFolderId();
     for(const file of files){
-      const t = toast(`আপলোড হচ্ছে: ${file.name}`, null, {sticky:true, progress:true});
+      const t = toast(`Uploading: ${file.name}`, null, {sticky:true, progress:true});
       try{
         const uploaded = await uploadFileWithProgress(file, parentId, (pct)=>{
           if(t._fill) t._fill.style.width = pct + "%";
@@ -1058,10 +1058,10 @@
           state.localThumbs[uploaded.id] = URL.createObjectURL(file);
         }
         t.remove();
-        toast(`${file.name} আপলোড হয়ে গেছে ✓`, "success");
+        toast(`${file.name} uploaded ✓`, "success");
       } catch(err){
         t.remove();
-        toast(`${file.name} আপলোড ব্যর্থ: ${err.message}`, "error", {sticky:true});
+        toast(`${file.name} upload failed: ${err.message}`, "error", {sticky:true});
       }
     }
     loadCurrent();
@@ -1078,7 +1078,7 @@
       try{
         const res = await apiFetch("https://www.googleapis.com/oauth2/v3/userinfo");
         const info = await res.json();
-        el("user-name").textContent = info.name ? info.name.split(" ")[0] : "সাইন আউট";
+        el("user-name").textContent = info.name ? info.name.split(" ")[0] : "Sign out";
         if(info.picture) el("user-avatar").src = info.picture;
         el("user-avatar").style.display = info.picture ? "block" : "none";
       } catch(e){
@@ -1087,7 +1087,7 @@
       state.pathStack = [];
       loadCurrent();
     } catch(err){
-      toast("Drive এর সাথে কানেক্ট করতে সমস্যা হয়েছে: " + err.message, "error", {sticky:true});
+      toast("Trouble connecting to Drive: " + err.message, "error", {sticky:true});
     }
   }
 
@@ -1096,7 +1096,7 @@
       await requestToken(false);
       afterSignIn();
     } catch(err){
-      toast("সাইন ইন বাতিল বা ব্যর্থ হয়েছে", "error");
+      toast("Sign-in was cancelled or failed", "error");
     }
   };
 
@@ -1113,7 +1113,7 @@
   el("setup-save-btn").onclick = ()=>{
     const val = el("setup-client-id").value.trim();
     if(!val || !val.includes(".apps.googleusercontent.com")){
-      toast("সঠিক Client ID দাও (…apps.googleusercontent.com দিয়ে শেষ হওয়া উচিত)", "error", {sticky:true});
+      toast("Please enter a valid Client ID (should end with …apps.googleusercontent.com)", "error", {sticky:true});
       return;
     }
     localStorage.setItem(LS_CLIENT_ID, val);
