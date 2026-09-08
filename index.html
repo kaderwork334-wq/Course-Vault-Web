@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>course vault</title>
 <meta name="theme-color" content="#121319">
 <meta name="mobile-web-app-capable" content="yes">
@@ -29,8 +29,11 @@
     --success:#7FBF8E;
     --danger:#E0685F;
     --danger-soft:rgba(224,104,95,0.14);
+    --danger-strong:#FF5A4E;
     --radius:14px;
     --radius-sm:9px;
+    --safe-top:env(safe-area-inset-top, 0px);
+    --safe-bottom:env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box;}
   html,body{height:100%;}
@@ -116,6 +119,7 @@
     cursor:pointer;
     transition:transform .08s ease, filter .15s ease, background .15s ease;
     white-space:nowrap;
+    min-height:44px;
   }
   .btn:active{transform:scale(0.97);}
   .btn-primary{background:var(--accent);color:var(--accent-ink);}
@@ -126,7 +130,7 @@
   .btn-danger{background:var(--danger-soft);color:var(--danger);}
   .btn-danger:hover{background:rgba(224,104,95,0.22);}
   .btn-block{width:100%;}
-  .btn-sm{padding:8px 13px;font-size:13.5px;border-radius:8px;}
+  .btn-sm{padding:8px 13px;font-size:13.5px;border-radius:8px;min-height:36px;}
 
   .google-btn{
     width:100%;
@@ -144,22 +148,124 @@
   .link-btn{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:0;}
   .link-btn:hover{color:var(--accent);}
 
+  /* ---------- Loading Screen ---------- */
+  .loading-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg);
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  .loading-shell.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    text-align: center;
+  }
+  .loading-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .loading-mark {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: linear-gradient(155deg, var(--accent), #A87E2E);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(212, 168, 75, 0.25);
+  }
+  .loading-mark svg { width: 28px; height: 28px; }
+  .loading-title {
+    font-family: 'Tiro Bangla', 'Hind Siliguri', serif;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    color: var(--text);
+  }
+  .loading-spinner {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(212, 168, 75, 0.2);
+    border-top-color: var(--accent);
+    animation: spin 0.75s linear infinite;
+  }
+  .loading-text {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.2px;
+  }
+
   /* ---------- app shell ---------- */
   #app-screen{display:none;min-height:100vh;flex-direction:column;}
   header.topbar{
     display:flex;align-items:center;justify-content:space-between;
-    padding:16px 22px;
+    padding:calc(16px + var(--safe-top)) 22px 16px;
     border-bottom:1px solid var(--border-soft);
     background:rgba(18,19,25,0.75);
     backdrop-filter:blur(14px);
     position:sticky;top:0;z-index:20;
     gap:12px;
   }
-  .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
-  .topbar-left .brand-mark{width:32px;height:32px;border-radius:8px;}
+  header.topbar.select-mode{background:rgba(42,32,5,0.55);border-bottom-color:var(--border);}
+  .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1;}
+  .topbar-left .brand-mark{width:32px;height:32px;border-radius:8px;flex:none;}
   .topbar-left .brand-mark svg{width:17px;height:17px;}
   .topbar-title{font-family:'Tiro Bangla',serif;font-size:17px;white-space:nowrap;}
-  .topbar-right{display:flex;align-items:center;gap:10px;flex:none;}
+  .topbar-right{display:flex;align-items:center;gap:8px;flex:none;}
+
+  .icon-btn{
+    width:38px;height:38px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--glass);border:1px solid var(--border-soft);
+    border-radius:10px;color:var(--text);cursor:pointer;
+    transition:background .15s ease;
+  }
+  .icon-btn:hover{background:var(--glass-hover);}
+  .icon-btn svg{width:17px;height:17px;}
+
+  .search-wrap{
+    display:flex;align-items:center;
+    flex:1;min-width:0;
+    background:var(--glass);border:1px solid var(--border-soft);
+    border-radius:999px;
+    padding:0 6px 0 12px;
+    max-width:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-width .22s ease, opacity .18s ease, padding .22s ease;
+  }
+  .search-wrap.open{max-width:520px;opacity:1;flex:1;}
+  .search-wrap svg{flex:none;width:16px;height:16px;color:var(--muted);}
+  #search-input{
+    flex:1;min-width:0;
+    background:none;border:none;outline:none;color:var(--text);
+    font-size:14.5px;padding:10px 8px;
+  }
+  #search-input::placeholder{color:#6B6858;}
+  #search-close{
+    flex:none;width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:none;border:none;color:var(--muted);cursor:pointer;
+  }
+  #search-close:hover{color:var(--text);background:rgba(255,255,255,0.06);}
+
+  .user-chip-wrap{position:relative;flex:none;}
   .user-chip{
     display:flex;align-items:center;gap:8px;
     padding:5px 10px 5px 5px;
@@ -167,20 +273,54 @@
     border-radius:999px;font-size:13px;color:var(--muted);
     cursor:pointer;
   }
+  .user-chip:hover{background:var(--glass-hover);}
   .user-chip img{width:24px;height:24px;border-radius:50%;}
+  .user-dropdown{
+    display:none;position:absolute;top:calc(100% + 8px);right:0;
+    background:#1E202A;border:1px solid var(--border-soft);
+    border-radius:12px;padding:8px;min-width:190px;
+    box-shadow:0 14px 34px rgba(0,0,0,0.45);z-index:210;
+  }
+  .user-dropdown.show{display:block;}
+  .user-dropdown-header{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 8px 12px;border-bottom:1px solid var(--border-soft);margin-bottom:6px;
+  }
+  .user-dropdown-header img{width:34px;height:34px;border-radius:50%;}
+  .user-dropdown-header .name{font-size:14px;font-weight:600;color:var(--text);}
+  .user-dropdown-header .email{font-size:12px;color:var(--muted);}
+  .user-dropdown button{
+    width:100%;text-align:right;background:none;border:none;color:var(--danger);
+    padding:9px 10px;border-radius:8px;font-size:14px;cursor:pointer;
+    display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  }
+  .user-dropdown button:hover{background:var(--danger-soft);}
 
-  main.content{flex:1;padding:22px 22px 100px;max-width:1080px;width:100%;margin:0 auto;}
+  main.content{flex:1;padding:22px 22px calc(120px + var(--safe-bottom));max-width:1080px;width:100%;margin:0 auto;}
 
   .breadcrumb{
     display:flex;align-items:center;flex-wrap:wrap;gap:6px;
     margin-bottom:20px;font-size:14.5px;
   }
-  .crumb{color:var(--muted);cursor:pointer;padding:4px 2px;border-radius:6px;}
-  .crumb:hover{color:var(--text);}
+  .crumb{display:flex;align-items:center;gap:5px;color:var(--muted);cursor:pointer;padding:5px 6px;border-radius:6px;}
+  .crumb:hover{color:var(--text);background:var(--glass);}
   .crumb.current{color:var(--text);font-weight:600;cursor:default;}
+  .crumb.current:hover{background:none;}
+  .crumb svg{width:14px;height:14px;}
   .crumb-sep{color:#514E42;}
 
   .toolbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+
+  /* bulk-select bar */
+  .bulk-bar{
+    display:none;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:20px;padding:10px 14px;
+    background:var(--accent-soft);border:1px solid var(--border);
+    border-radius:12px;flex-wrap:wrap;
+  }
+  .bulk-bar.show{display:flex;}
+  .bulk-bar .count{font-size:14px;font-weight:600;color:var(--text);}
+  .bulk-bar .actions{display:flex;gap:8px;flex-wrap:wrap;}
 
   .grid{
     display:grid;
@@ -194,11 +334,15 @@
     border-radius:var(--radius);
     padding:16px 14px 13px;
     cursor:pointer;
-    transition:background .15s ease, border-color .15s ease;
+    transition:background .15s ease, border-color .15s ease, transform .12s ease, box-shadow .15s ease;
     user-select:none;
+    -webkit-user-select:none;
   }
-  .item-card:hover{background:var(--glass-hover);border-color:var(--border);}
+  .item-card:hover{background:var(--glass-hover);border-color:var(--border);transform:translateY(-2px) scale(1.012);box-shadow:0 10px 26px rgba(0,0,0,0.28);}
+  .item-card:active{transform:scale(0.98);}
+  .item-card.selected{border-color:var(--accent);background:var(--accent-soft);}
   .item-thumb{
+    position:relative;
     width:100%;height:92px;
     border-radius:10px;
     background:rgba(255,255,255,0.03);
@@ -208,21 +352,46 @@
   }
   .item-thumb svg{width:34px;height:34px;}
   .item-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .file-type-badge{
+    position:absolute;bottom:6px;left:6px;
+    font-size:9.5px;font-weight:700;letter-spacing:0.4px;
+    padding:2.5px 6px;border-radius:5px;
+    background:rgba(10,10,14,0.72);color:var(--text);
+    backdrop-filter:blur(2px);
+  }
   .item-name{
     font-size:14px;font-weight:600;line-height:1.35;
     word-break:break-word;
     margin-bottom:6px;
   }
-  .item-meta{font-size:11.5px;color:var(--muted);}
+  .item-meta{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+  .item-count-pill{
+    display:inline-block;font-size:11px;color:var(--accent);
+    background:var(--accent-soft);padding:1.5px 7px;border-radius:999px;
+  }
   .item-menu-btn{
     position:absolute;top:9px;right:7px;
-    width:25px;height:25px;border-radius:7px;
+    width:27px;height:27px;border-radius:7px;
     display:flex;align-items:center;justify-content:center;
     color:#fff;background:rgba(10,10,14,0.5);
     backdrop-filter:blur(3px);
     border:none;cursor:pointer;
   }
   .item-menu-btn:hover{background:rgba(10,10,14,0.75);}
+
+  .select-checkbox{
+    position:absolute;top:9px;left:7px;
+    width:22px;height:22px;border-radius:7px;
+    border:1.6px solid rgba(255,255,255,0.55);
+    background:rgba(10,10,14,0.45);
+    display:none;align-items:center;justify-content:center;
+    z-index:5;
+  }
+  .select-mode .select-checkbox{display:flex;}
+  .select-mode .item-menu-btn{display:none;}
+  .item-card.selected .select-checkbox{background:var(--accent);border-color:var(--accent);}
+  .select-checkbox svg{width:13px;height:13px;display:none;}
+  .item-card.selected .select-checkbox svg{display:block;}
 
   .popover{
     position:fixed;
@@ -246,9 +415,17 @@
   .empty-state{
     text-align:center;padding:70px 20px;color:var(--muted);
   }
-  .empty-state svg{width:52px;height:52px;margin-bottom:16px;opacity:0.6;}
+  .empty-illustration{
+    width:88px;height:88px;margin:0 auto 20px;
+    border-radius:22px;
+    background:linear-gradient(155deg, var(--accent-soft), rgba(212,168,75,0.03));
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .empty-illustration svg{width:40px;height:40px;}
   .empty-state h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:19px;color:var(--text);margin:0 0 8px;}
-  .empty-state p{font-size:14px;margin:0;}
+  .empty-state p{font-size:14px;margin:0 0 20px;}
+  .empty-state .empty-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
 
   /* ---------- modal ---------- */
   .modal-overlay{
@@ -264,10 +441,74 @@
   .modal h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:19px;margin:0 0 18px;}
   .modal-actions{display:flex;gap:10px;margin-top:20px;}
   .modal-actions .btn{flex:1;}
+  .modal.modal-danger{border-color:rgba(224,104,95,0.45);box-shadow:0 0 0 1px rgba(224,104,95,0.12), 0 20px 50px rgba(224,104,95,0.10);}
+  .modal.modal-danger h3{color:var(--danger-strong);}
+
+  /* bottom sheet */
+  .sheet-overlay{
+    display:none;position:fixed;inset:0;background:rgba(8,8,10,0.55);
+    z-index:300;align-items:flex-end;justify-content:center;
+  }
+  .sheet-overlay.show{display:flex;}
+  .sheet{
+    width:100%;max-width:480px;
+    background:#191A22;border:1px solid var(--border-soft);border-bottom:none;
+    border-radius:20px 20px 0 0;
+    padding:10px 14px calc(20px + var(--safe-bottom));
+    animation:sheetUp .2s ease;
+  }
+  @keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .sheet-handle{width:38px;height:4px;background:var(--border-soft);border-radius:2px;margin:6px auto 14px;}
+  .sheet-title{font-family:'Tiro Bangla',serif;font-size:16px;color:var(--muted);padding:0 8px 10px;}
+  .sheet-item{
+    display:flex;align-items:center;gap:14px;
+    width:100%;background:none;border:none;color:var(--text);
+    padding:14px 8px;border-radius:12px;font-size:15.5px;cursor:pointer;text-align:right;
+    min-height:44px;
+  }
+  .sheet-item:hover{background:var(--glass-hover);}
+  .sheet-item .sheet-icon{
+    width:38px;height:38px;border-radius:10px;flex:none;
+    background:var(--accent-soft);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .sheet-icon svg{width:18px;height:18px;}
+
+  /* FAB */
+  .fab{
+    display:none;
+    position:fixed;
+    bottom:calc(24px + var(--safe-bottom));right:22px;
+    width:58px;height:58px;border-radius:50%;
+    background:linear-gradient(155deg, var(--accent), #A87E2E);
+    color:var(--accent-ink);
+    align-items:center;justify-content:center;
+    border:none;cursor:pointer;z-index:60;
+    box-shadow:0 10px 28px rgba(212,168,75,0.35);
+    transition:transform .1s ease;
+  }
+  .fab:active{transform:scale(0.93);}
+  .fab svg{width:24px;height:24px;}
+
+  /* lightbox / preview */
+  .lightbox-overlay{
+    display:none;position:fixed;inset:0;background:rgba(6,6,8,0.88);
+    z-index:350;align-items:center;justify-content:center;padding:20px;
+  }
+  .lightbox-overlay.show{display:flex;}
+  .lightbox-inner{max-width:min(900px,94vw);max-height:88vh;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .lightbox-inner img{max-width:100%;max-height:74vh;border-radius:10px;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .lightbox-inner iframe{width:min(820px,90vw);height:70vh;border:none;border-radius:10px;background:#fff;}
+  .lightbox-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;color:var(--text);}
+  .lightbox-name{font-size:14px;color:var(--muted);}
+  .lightbox-close{
+    width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--border-soft);
+    color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
 
   /* ---------- toast / progress ---------- */
   #toast-stack{
-    position:fixed;bottom:22px;right:22px;z-index:400;
+    position:fixed;bottom:calc(22px + var(--safe-bottom));right:22px;z-index:400;
     display:flex;flex-direction:column;gap:10px;
     max-width:320px;width:calc(100% - 44px);
   }
@@ -280,8 +521,16 @@
   }
   @keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
   .toast.error{border-color:rgba(224,104,95,0.4);}
-  .toast.success{border-color:rgba(127,191,142,0.35);}
-  .toast-title{font-weight:600;display:flex;justify-content:space-between;gap:10px;}
+  .toast.success{border-color:rgba(127,191,142,0.4);}
+  .toast-title{font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .toast-title .check{
+    width:17px;height:17px;border-radius:50%;background:var(--success);flex:none;
+    display:flex;align-items:center;justify-content:center;
+    animation:popCheck .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toast-title .check svg{width:10px;height:10px;}
+  @keyframes popCheck{from{transform:scale(0);}to{transform:scale(1);}}
+  .toast-sub{font-size:11.5px;color:var(--muted);}
   .toast-bar{height:4px;border-radius:2px;background:rgba(255,255,255,0.08);overflow:hidden;}
   .toast-bar-fill{height:100%;background:var(--accent);width:0%;transition:width .2s ease;}
 
@@ -292,15 +541,19 @@
   }
   @keyframes spin{to{transform:rotate(360deg);}}
 
-  .loading-shell{display:flex;align-items:center;justify-content:center;min-height:100vh;color:var(--muted);gap:10px;font-size:14px;}
+  .grid-loading{display:flex;align-items:center;justify-content:center;min-height:120px;color:var(--muted);gap:10px;font-size:14px;grid-column:1/-1;}
 
   input[type=file]{display:none;}
 
-  @media (max-width:480px){
+  @media (max-width:640px){
     .card{padding:28px 20px;}
-    main.content{padding:18px 14px 100px;}
-    .topbar{padding:13px 14px;}
-    .grid{grid-template-columns:repeat(auto-fill, minmax(128px, 1fr));}
+    main.content{padding:18px 14px calc(120px + var(--safe-bottom));}
+    .topbar{padding:calc(13px + var(--safe-top)) 14px 13px;}
+    .grid{grid-template-columns:repeat(2, 1fr);}
+    .toolbar{display:none;}
+    .fab{display:flex;}
+    .topbar-title{display:none;}
+    .search-wrap.open{max-width:100%;}
   }
 </style>
 </head>
@@ -308,7 +561,20 @@
 
 <!-- ============ LOADING ============ -->
 <div id="loading-screen" class="loading-shell">
-  <div class="spinner"></div><span>Loading…</span>
+  <div class="loading-content">
+    <div class="loading-brand">
+      <div class="brand-mark loading-mark">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/>
+        </svg>
+      </div>
+      <div class="loading-title">Course Vault</div>
+    </div>
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading your vault…</p>
+  </div>
 </div>
 
 <!-- ============ SETUP SCREEN (first run — needs Google Client ID) ============ -->
@@ -350,23 +616,59 @@
 
 <!-- ============ MAIN APP ============ -->
 <div id="app-screen">
-  <header class="topbar">
-    <div class="topbar-left">
+  <header class="topbar" id="topbar">
+    <div class="topbar-left" id="topbar-left">
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
       </div>
       <div class="topbar-title">Course Vault</div>
+      <div class="search-wrap" id="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="search-input" placeholder="Search courses, folders, files…" autocomplete="off">
+        <button id="search-close" title="Close search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="topbar-right">
-      <div class="user-chip" id="user-chip">
-        <img id="user-avatar" src="" alt="">
-        <span id="user-name">Sign out</span>
+    <div class="topbar-right" id="topbar-right">
+      <button class="icon-btn" id="btn-search-toggle" title="Search">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="user-chip-wrap">
+        <div class="user-chip" id="user-chip">
+          <img id="user-avatar" src="" alt="">
+          <span id="user-name">Account</span>
+        </div>
+        <div class="user-dropdown" id="user-dropdown">
+          <div class="user-dropdown-header">
+            <img id="dropdown-avatar" src="" alt="">
+            <div>
+              <div class="name" id="dropdown-name">—</div>
+              <div class="email" id="dropdown-email">—</div>
+            </div>
+          </div>
+          <button id="dropdown-signout">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
   <main class="content">
     <div class="breadcrumb" id="breadcrumb"></div>
+
+    <div class="bulk-bar" id="bulk-bar">
+      <span class="count" id="bulk-count">0 selected</span>
+      <div class="actions">
+        <button class="btn btn-ghost btn-sm" id="bulk-download">Download</button>
+        <button class="btn btn-ghost btn-sm" id="bulk-move">Move</button>
+        <button class="btn btn-danger btn-sm" id="bulk-delete">Delete</button>
+        <button class="btn btn-ghost btn-sm" id="bulk-cancel">Cancel</button>
+      </div>
+    </div>
+
     <div class="toolbar">
       <button class="btn btn-primary" id="btn-new-folder">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
@@ -381,13 +683,52 @@
         Upload File
       </button>
     </div>
+
     <div id="grid" class="grid"></div>
     <div id="empty-state" class="empty-state" style="display:none;"></div>
   </main>
+
+  <button class="fab" id="fab-btn" title="Add">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+  </button>
 </div>
 
 <input type="file" id="input-camera" accept="image/*" capture="environment" multiple>
 <input type="file" id="input-upload" multiple>
+<input type="file" id="input-gallery" accept="image/*" multiple>
+
+<!-- Bottom sheet: add actions -->
+<div class="sheet-overlay" id="sheet-add">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheet-add-title">Add to this folder</div>
+    <button class="sheet-item" id="sheet-new-folder">
+      <span class="sheet-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+      <span id="sheet-new-folder-label">New Course</span>
+    </button>
+    <button class="sheet-item" id="sheet-camera">
+      <span class="sheet-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.3" stroke="currentColor" stroke-width="1.7"/></svg></span>
+      Take Photo
+    </button>
+    <button class="sheet-item" id="sheet-gallery">
+      <span class="sheet-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M21 16l-5.5-5.5L9 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+      Choose from Gallery
+    </button>
+    <button class="sheet-item" id="sheet-upload">
+      <span class="sheet-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+      Upload File
+    </button>
+  </div>
+</div>
+
+<!-- Bottom sheet: move destination picker -->
+<div class="sheet-overlay" id="sheet-move">
+  <div class="sheet" style="max-height:70vh;overflow-y:auto;">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Move to…</div>
+    <div id="move-list"></div>
+  </div>
+</div>
 
 <!-- New folder modal -->
 <div class="modal-overlay" id="modal-folder">
@@ -417,13 +758,27 @@
 
 <!-- Delete confirm modal -->
 <div class="modal-overlay" id="modal-delete">
-  <div class="modal">
+  <div class="modal modal-danger">
     <h3 id="delete-title">Delete?</h3>
     <p style="color:var(--muted);font-size:14px;margin:0 0 4px;" id="delete-body"></p>
     <div class="modal-actions">
       <button class="btn btn-ghost" id="delete-cancel">Cancel</button>
       <button class="btn btn-danger" id="delete-confirm">Delete</button>
     </div>
+  </div>
+</div>
+
+<!-- Lightbox preview -->
+<div class="lightbox-overlay" id="lightbox">
+  <div class="lightbox-inner">
+    <div class="lightbox-topbar">
+      <span class="lightbox-name" id="lightbox-name"></span>
+      <button class="lightbox-close" id="lightbox-close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div id="lightbox-body"></div>
+    <a id="lightbox-open-drive" class="btn btn-ghost btn-sm" target="_blank" style="text-decoration:none;">Open in Drive</a>
   </div>
 </div>
 
@@ -490,6 +845,13 @@
     localThumbs: {},   // fileId -> local blob object URL, for instant preview right after upload
     openPopover: null,
     pendingDelete: null,
+    pendingDeleteBulk: false,
+    searchActive: false,
+    searchQuery: "",
+    searchDebounce: null,
+    selectMode: false,
+    selectedIds: new Set(),
+    longPressTimer: null,
   };
 
   // ---------- element refs ----------
@@ -502,8 +864,18 @@
   };
 
   function showScreen(name){
+    if (name !== "loading") {
+      const loading = el("loading-screen");
+      if (loading && !loading.classList.contains("hide")) {
+        loading.classList.add("hide");
+      }
+    }
     Object.entries(screens).forEach(([k, node])=>{
       if(!node) return;
+      if(k === "loading"){
+        if(name === "loading") node.style.display = "flex";
+        return; // hide handled via .hide class transition above
+      }
       if(k === "app"){
         node.style.display = (k===name) ? "flex" : "none";
       } else {
@@ -520,8 +892,15 @@
     t.className = "toast" + (type ? " " + type : "");
     const title = document.createElement("div");
     title.className = "toast-title";
-    title.innerHTML = `<span>${msg}</span>`;
+    const checkHtml = type === "success" ? `<span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#12210f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>` : "";
+    title.innerHTML = `<span>${msg}</span>${checkHtml}`;
     t.appendChild(title);
+    if(opts.sub){
+      const sub = document.createElement("div");
+      sub.className = "toast-sub";
+      sub.textContent = opts.sub;
+      t.appendChild(sub);
+    }
     if(opts.progress){
       const bar = document.createElement("div");
       bar.className = "toast-bar";
@@ -557,6 +936,18 @@
     return ICONS.generic;
   }
 
+  function fileTypeLabel(mime, name){
+    if(mime === "application/pdf") return "PDF";
+    if(mime && mime.includes("presentation")) return "PPT";
+    if(mime && (mime.includes("word") || (mime.includes("document") && !mime.includes("google")))) return "DOCX";
+    if(mime && mime.includes("spreadsheet")) return "XLSX";
+    if(name){
+      const ext = name.split(".").pop();
+      if(ext && ext.length <= 4 && ext !== name) return ext.toUpperCase();
+    }
+    return null;
+  }
+
   function fmtBytes(bytes){
     if(!bytes) return "";
     const n = parseInt(bytes, 10);
@@ -571,7 +962,6 @@
   }
 
   // ---------- Google Identity / token handling ----------
-  let gisReady = false;
   let signInResolver = null;
 
   function waitForGis(cb){
@@ -637,8 +1027,33 @@
   // ---------- Drive helpers ----------
   async function driveListChildren(folderId){
     const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
-    const fields = encodeURIComponent("files(id,name,mimeType,createdTime,size,webViewLink,thumbnailLink)");
+    const fields = encodeURIComponent("files(id,name,mimeType,createdTime,size,webViewLink,webContentLink,thumbnailLink,parents)");
     const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=folder,name&pageSize=200`);
+    const data = await res.json();
+    return data.files || [];
+  }
+
+  async function driveCountChildren(folderId){
+    try{
+      const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+      const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id)&pageSize=1000`);
+      const data = await res.json();
+      return (data.files || []).length;
+    } catch(e){ return null; }
+  }
+
+  async function driveSearch(term){
+    const safe = term.replace(/'/g, "\\'");
+    const q = encodeURIComponent(`name contains '${safe}' and trashed = false`);
+    const fields = encodeURIComponent("files(id,name,mimeType,createdTime,size,webViewLink,webContentLink,thumbnailLink,parents)");
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=folder,name&pageSize=100`);
+    const data = await res.json();
+    return data.files || [];
+  }
+
+  async function driveListAllFolders(){
+    const q = encodeURIComponent(`mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,parents)&orderBy=name&pageSize=200`);
     const data = await res.json();
     return data.files || [];
   }
@@ -666,6 +1081,12 @@
 
   async function driveDelete(id){
     await apiFetch(`https://www.googleapis.com/drive/v3/files/${id}`, {method:"DELETE"});
+  }
+
+  async function driveMove(id, newParentId, oldParentId){
+    const url = `https://www.googleapis.com/drive/v3/files/${id}?addParents=${newParentId}&removeParents=${oldParentId}&fields=id,parents`;
+    const res = await apiFetch(url, {method:"PATCH"});
+    return res.json();
   }
 
   async function driveGetFile(id){
@@ -822,10 +1243,22 @@
     const bc = el("breadcrumb");
     bc.innerHTML = "";
     const home = document.createElement("span");
-    home.className = "crumb" + (state.pathStack.length===0 ? " current" : "");
-    home.textContent = "All Courses";
-    home.onclick = ()=>{ if(state.pathStack.length){ state.pathStack = []; loadCurrent(); } };
+    home.className = "crumb" + (state.pathStack.length===0 && !state.searchActive ? " current" : "");
+    home.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>All Courses</span>`;
+    home.onclick = ()=>{ exitSearch(); if(state.pathStack.length){ state.pathStack = []; loadCurrent(); } };
     bc.appendChild(home);
+
+    if(state.searchActive){
+      const sep = document.createElement("span");
+      sep.className = "crumb-sep";
+      sep.textContent = "›";
+      bc.appendChild(sep);
+      const c = document.createElement("span");
+      c.className = "crumb current";
+      c.textContent = `Search: "${state.searchQuery}"`;
+      bc.appendChild(c);
+      return;
+    }
 
     state.pathStack.forEach((p, idx)=>{
       const sep = document.createElement("span");
@@ -844,10 +1277,38 @@
     });
 
     el("new-folder-label").textContent = state.pathStack.length === 0 ? "New Course" : "New Folder";
+    el("sheet-new-folder-label").textContent = state.pathStack.length === 0 ? "New Course" : "New Folder";
+    el("sheet-add-title").textContent = state.pathStack.length === 0 ? "Add a new course" : "Add to this folder";
   }
 
   function closePopover(){
     if(state.openPopover){ state.openPopover.remove(); state.openPopover = null; }
+  }
+
+  function updateBulkBar(){
+    const bar = el("bulk-bar");
+    const n = state.selectedIds.size;
+    if(state.selectMode && n > 0){
+      bar.classList.add("show");
+      el("bulk-count").textContent = n + " selected";
+    } else {
+      bar.classList.remove("show");
+    }
+    el("grid").classList.toggle("select-mode", state.selectMode);
+  }
+
+  function exitSelectMode(){
+    state.selectMode = false;
+    state.selectedIds.clear();
+    updateBulkBar();
+    renderGrid(state.currentItems);
+  }
+
+  function toggleSelected(id){
+    if(state.selectedIds.has(id)) state.selectedIds.delete(id);
+    else state.selectedIds.add(id);
+    if(state.selectedIds.size === 0) state.selectMode = false;
+    updateBulkBar();
   }
 
   function renderGrid(items){
@@ -855,16 +1316,44 @@
     const grid = el("grid");
     const empty = el("empty-state");
     grid.innerHTML = "";
+    grid.classList.toggle("select-mode", state.selectMode);
 
     if(items.length === 0){
       grid.style.display = "none";
       empty.style.display = "block";
-      const atRoot = state.pathStack.length === 0;
-      empty.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#9B9788" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <h3>${atRoot ? "No courses added yet" : "This folder is still empty"}</h3>
-        <p>${atRoot ? "Tap the \u201cNew Course\u201d button above to get started" : "Create a folder or upload a photo/file"}</p>
-      `;
+      const atRoot = state.pathStack.length === 0 && !state.searchActive;
+      if(state.searchActive){
+        empty.innerHTML = `
+          <div class="empty-illustration">${ICONS.generic.replace(/#9B9788/g,"var(--muted)")}</div>
+          <h3>No matches found</h3>
+          <p>Try a different search term.</p>
+        `;
+      } else {
+        empty.innerHTML = `
+          <div class="empty-illustration">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="var(--accent)" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>${atRoot ? "No courses added yet" : "This folder is still empty"}</h3>
+          <p>${atRoot ? "Add your first course to start organizing your materials" : "Create a folder or upload a photo/file"}</p>
+          <div class="empty-actions">
+            ${atRoot
+              ? `<button class="btn btn-primary btn-sm" id="empty-add-course">Add your first course</button>`
+              : `<button class="btn btn-primary btn-sm" id="empty-upload-photo">Upload Photo</button><button class="btn btn-ghost btn-sm" id="empty-upload-file">Upload File</button>`
+            }
+          </div>
+        `;
+      }
+      if(!state.searchActive){
+        if(atRoot){
+          const b = document.getElementById("empty-add-course");
+          if(b) b.onclick = openNewFolderModal;
+        } else {
+          const p = document.getElementById("empty-upload-photo");
+          if(p) p.onclick = ()=> el("input-camera").click();
+          const f = document.getElementById("empty-upload-file");
+          if(f) f.onclick = ()=> el("input-upload").click();
+        }
+      }
       return;
     }
     grid.style.display = "grid";
@@ -873,8 +1362,15 @@
     items.forEach(item=>{
       const isFolder = item.mimeType === "application/vnd.google-apps.folder";
       const isImage = item.mimeType && item.mimeType.startsWith("image/");
+      const isPdf = item.mimeType === "application/pdf";
       const card = document.createElement("div");
-      card.className = "item-card";
+      card.className = "item-card" + (state.selectedIds.has(item.id) ? " selected" : "");
+
+      const checkbox = document.createElement("div");
+      checkbox.className = "select-checkbox";
+      checkbox.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#2A2005" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      checkbox.onclick = (e)=>{ e.stopPropagation(); toggleSelected(item.id); card.classList.toggle("selected"); };
+      card.appendChild(checkbox);
 
       const iconWrap = document.createElement("div");
       iconWrap.className = "item-thumb";
@@ -889,6 +1385,15 @@
       } else {
         iconWrap.innerHTML = iconFor(item.mimeType, item.name);
       }
+      if(!isFolder){
+        const label = fileTypeLabel(item.mimeType, item.name);
+        if(label){
+          const badge = document.createElement("span");
+          badge.className = "file-type-badge";
+          badge.textContent = label;
+          iconWrap.appendChild(badge);
+        }
+      }
       card.appendChild(iconWrap);
 
       const nameEl = document.createElement("div");
@@ -898,7 +1403,16 @@
 
       const metaEl = document.createElement("div");
       metaEl.className = "item-meta";
-      metaEl.textContent = isFolder ? fmtDate(item.createdTime) : [fmtBytes(item.size), fmtDate(item.createdTime)].filter(Boolean).join(" · ");
+      if(isFolder){
+        metaEl.innerHTML = `<span>${fmtDate(item.createdTime)}</span><span class="item-count-pill" id="count-${item.id}">…</span>`;
+        driveCountChildren(item.id).then(n=>{
+          const pill = document.getElementById("count-" + item.id);
+          if(pill) pill.textContent = (n===null ? "" : n + (n===1?" item":" items"));
+          if(n===null && pill) pill.remove();
+        });
+      } else {
+        metaEl.textContent = [fmtBytes(item.size), fmtDate(item.createdTime)].filter(Boolean).join(" · ");
+      }
       card.appendChild(metaEl);
 
       const menuBtn = document.createElement("button");
@@ -910,14 +1424,46 @@
       };
       card.appendChild(menuBtn);
 
+      // click behavior
       card.onclick = ()=>{
+        if(state.selectMode){
+          toggleSelected(item.id);
+          card.classList.toggle("selected");
+          return;
+        }
         if(isFolder){
+          exitSearch(true);
           state.pathStack.push({id:item.id, name:item.name});
           loadCurrent();
+        } else if(isImage || isPdf){
+          openLightbox(item);
         } else if(item.webViewLink){
           window.open(item.webViewLink, "_blank");
         }
       };
+
+      // long-press (touch) -> select mode
+      let pressTimer = null, moved = false;
+      card.addEventListener("touchstart", ()=>{
+        moved = false;
+        pressTimer = setTimeout(()=>{
+          if(moved) return;
+          state.selectMode = true;
+          toggleSelected(item.id);
+          card.classList.add("selected");
+          if(navigator.vibrate) navigator.vibrate(12);
+        }, 480);
+      }, {passive:true});
+      card.addEventListener("touchmove", ()=>{ moved = true; clearTimeout(pressTimer); }, {passive:true});
+      card.addEventListener("touchend", ()=> clearTimeout(pressTimer));
+
+      // right-click (desktop) -> select mode
+      card.addEventListener("contextmenu", (e)=>{
+        e.preventDefault();
+        state.selectMode = true;
+        toggleSelected(item.id);
+        card.classList.add("selected");
+      });
 
       grid.appendChild(card);
     });
@@ -937,11 +1483,24 @@
     pop.appendChild(renameBtn);
 
     if(!isFolder){
+      const previewBtn = document.createElement("button");
+      const isImage = item.mimeType && item.mimeType.startsWith("image/");
+      const isPdf = item.mimeType === "application/pdf";
+      if(isImage || isPdf){
+        previewBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg> Preview`;
+        previewBtn.onclick = ()=>{ closePopover(); openLightbox(item); };
+        pop.appendChild(previewBtn);
+      }
       const openBtn = document.createElement("button");
       openBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4L10 14M6 6H5a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Open in Drive`;
       openBtn.onclick = ()=>{ closePopover(); window.open(item.webViewLink, "_blank"); };
       pop.appendChild(openBtn);
     }
+
+    const moveBtn = document.createElement("button");
+    moveBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 9l7-7 7 7M12 2v14M5 15v5a1 1 0 001 1h12a1 1 0 001-1v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Move`;
+    moveBtn.onclick = ()=>{ closePopover(); openMoveSheet([item]); };
+    pop.appendChild(moveBtn);
 
     const delBtn = document.createElement("button");
     delBtn.className = "danger";
@@ -960,7 +1519,7 @@
     grid.innerHTML = "";
     el("empty-state").style.display = "none";
     grid.style.display = "grid";
-    grid.innerHTML = `<div class="loading-shell" style="grid-column:1/-1;min-height:120px;"><div class="spinner"></div><span>Loading…</span></div>`;
+    grid.innerHTML = `<div class="grid-loading"><div class="spinner"></div><span>Loading…</span></div>`;
     try{
       const items = await driveListChildren(currentFolderId());
       renderGrid(items);
@@ -969,6 +1528,50 @@
       toast("Failed to load the list: " + err.message, "error", {sticky:true});
     }
   }
+
+  // ---------- search ----------
+  function openSearch(){
+    el("search-wrap").classList.add("open");
+    el("btn-search-toggle").style.display = "none";
+    setTimeout(()=> el("search-input").focus(), 120);
+  }
+  function closeSearchBar(){
+    el("search-wrap").classList.remove("open");
+    el("btn-search-toggle").style.display = "flex";
+    el("search-input").value = "";
+  }
+  function exitSearch(keepBarOpenState){
+    if(!state.searchActive) return;
+    state.searchActive = false;
+    state.searchQuery = "";
+    if(!keepBarOpenState) closeSearchBar();
+  }
+  el("btn-search-toggle").onclick = openSearch;
+  el("search-close").onclick = ()=>{ closeSearchBar(); if(state.searchActive){ state.searchActive=false; state.searchQuery=""; loadCurrent(); } };
+  el("search-input").addEventListener("input", (e)=>{
+    const val = e.target.value.trim();
+    clearTimeout(state.searchDebounce);
+    state.searchDebounce = setTimeout(async ()=>{
+      if(!val){
+        if(state.searchActive){ state.searchActive=false; state.searchQuery=""; loadCurrent(); }
+        return;
+      }
+      state.searchActive = true;
+      state.searchQuery = val;
+      renderBreadcrumb();
+      const grid = el("grid");
+      grid.innerHTML = `<div class="grid-loading"><div class="spinner"></div><span>Searching…</span></div>`;
+      el("empty-state").style.display = "none";
+      grid.style.display = "grid";
+      try{
+        const results = await driveSearch(val);
+        if(state.searchQuery === val) renderGrid(results);
+      } catch(err){
+        grid.innerHTML = "";
+        toast("Search failed: " + err.message, "error", {sticky:true});
+      }
+    }, 350);
+  });
 
   // ---------- modals: new folder ----------
   function openNewFolderModal(){
@@ -990,7 +1593,7 @@
     try{
       await driveCreateFolder(name, currentFolderId());
       t.remove();
-      toast("Created ✓", "success");
+      toast("Created", "success");
       loadCurrent();
     } catch(err){
       t.remove();
@@ -1014,8 +1617,8 @@
     el("modal-rename").classList.remove("show");
     try{
       await driveRename(item.id, newName);
-      toast("Renamed ✓", "success");
-      loadCurrent();
+      toast("Renamed", "success");
+      state.searchActive ? el("search-input").dispatchEvent(new Event("input")) : loadCurrent();
     } catch(err){
       toast("Could not rename: " + err.message, "error", {sticky:true});
     }
@@ -1023,23 +1626,132 @@
 
   // ---------- modals: delete ----------
   function openDeleteModal(item, isFolder){
+    state.pendingDeleteBulk = false;
     el("delete-title").textContent = isFolder ? "Delete folder?" : "Delete file?";
     el("delete-body").textContent = `"${item.name}" ${isFolder ? "and everything inside it " : ""}will be deleted (moved to Google Drive trash).`;
     el("modal-delete").classList.add("show");
     el("modal-delete")._item = item;
   }
+  function openBulkDeleteModal(items){
+    state.pendingDeleteBulk = true;
+    el("delete-title").textContent = `Delete ${items.length} item${items.length>1?"s":""}?`;
+    el("delete-body").textContent = `These items will be deleted (moved to Google Drive trash). Folders will be deleted along with everything inside them.`;
+    el("modal-delete").classList.add("show");
+    el("modal-delete")._items = items;
+  }
   el("delete-cancel").onclick = ()=> el("modal-delete").classList.remove("show");
   el("delete-confirm").onclick = async ()=>{
-    const item = el("modal-delete")._item;
     el("modal-delete").classList.remove("show");
+    if(state.pendingDeleteBulk){
+      const items = el("modal-delete")._items || [];
+      const t = toast(`Deleting ${items.length} item(s)…`, null, {sticky:true});
+      let failed = 0;
+      for(const it of items){
+        try{ await driveDelete(it.id); } catch(e){ failed++; }
+      }
+      t.remove();
+      if(failed) toast(`${failed} item(s) could not be deleted`, "error", {sticky:true});
+      else toast("Deleted", "success");
+      exitSelectMode();
+      loadCurrent();
+      return;
+    }
+    const item = el("modal-delete")._item;
     try{
       await driveDelete(item.id);
-      toast("Deleted ✓", "success");
-      loadCurrent();
+      toast("Deleted", "success");
+      state.searchActive ? el("search-input").dispatchEvent(new Event("input")) : loadCurrent();
     } catch(err){
       toast("Could not delete: " + err.message, "error", {sticky:true});
     }
   };
+
+  // ---------- bulk bar ----------
+  el("bulk-cancel").onclick = exitSelectMode;
+  el("bulk-delete").onclick = ()=>{
+    const items = state.currentItems.filter(i=> state.selectedIds.has(i.id));
+    if(items.length === 0) return;
+    openBulkDeleteModal(items);
+  };
+  el("bulk-download").onclick = ()=>{
+    const items = state.currentItems.filter(i=> state.selectedIds.has(i.id) && i.mimeType !== "application/vnd.google-apps.folder");
+    if(items.length === 0){ toast("Select at least one file to download", "error"); return; }
+    items.forEach(it=>{
+      const link = it.webContentLink || (it.webViewLink ? it.webViewLink.replace("/view","/export") : null);
+      window.open(link || `https://drive.google.com/uc?export=download&id=${it.id}`, "_blank");
+    });
+  };
+  el("bulk-move").onclick = ()=>{
+    const items = state.currentItems.filter(i=> state.selectedIds.has(i.id));
+    if(items.length === 0) return;
+    openMoveSheet(items);
+  };
+
+  // ---------- move sheet ----------
+  async function openMoveSheet(items){
+    const list = el("move-list");
+    list.innerHTML = `<div class="grid-loading"><div class="spinner"></div><span>Loading folders…</span></div>`;
+    el("sheet-move").classList.add("show");
+    try{
+      const folders = await driveListAllFolders();
+      list.innerHTML = "";
+      const rootRow = document.createElement("button");
+      rootRow.className = "sheet-item";
+      rootRow.innerHTML = `<span class="sheet-icon">${ICONS.folder.replace(/#D4A84B/g,"currentColor")}</span> All Courses (root)`;
+      rootRow.onclick = ()=> doMove(items, state.rootFolderId);
+      list.appendChild(rootRow);
+      folders
+        .filter(f=> f.id !== state.rootFolderId && !items.some(it=>it.id===f.id))
+        .forEach(f=>{
+          const row = document.createElement("button");
+          row.className = "sheet-item";
+          row.innerHTML = `<span class="sheet-icon">${ICONS.folder.replace(/#D4A84B/g,"currentColor")}</span> ${f.name}`;
+          row.onclick = ()=> doMove(items, f.id);
+          list.appendChild(row);
+        });
+    } catch(err){
+      list.innerHTML = "";
+      toast("Could not load folders: " + err.message, "error", {sticky:true});
+      el("sheet-move").classList.remove("show");
+    }
+  }
+  async function doMove(items, destId){
+    el("sheet-move").classList.remove("show");
+    const t = toast(`Moving ${items.length} item(s)…`, null, {sticky:true});
+    let failed = 0;
+    for(const it of items){
+      const oldParent = (it.parents && it.parents[0]) || currentFolderId();
+      try{ await driveMove(it.id, destId, oldParent); } catch(e){ failed++; }
+    }
+    t.remove();
+    if(failed) toast(`${failed} item(s) could not be moved`, "error", {sticky:true});
+    else toast("Moved", "success");
+    exitSelectMode();
+    state.searchActive ? el("search-input").dispatchEvent(new Event("input")) : loadCurrent();
+  }
+  el("sheet-move").addEventListener("click", (e)=>{ if(e.target === el("sheet-move")) el("sheet-move").classList.remove("show"); });
+
+  // ---------- lightbox preview ----------
+  function openLightbox(item){
+    const body = el("lightbox-body");
+    body.innerHTML = "";
+    el("lightbox-name").textContent = item.name;
+    el("lightbox-open-drive").href = item.webViewLink || "#";
+    const isImage = item.mimeType && item.mimeType.startsWith("image/");
+    if(isImage){
+      const img = document.createElement("img");
+      img.src = state.localThumbs[item.id] || item.thumbnailLink || item.webContentLink || "";
+      img.alt = item.name;
+      body.appendChild(img);
+    } else {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://drive.google.com/file/d/${item.id}/preview`;
+      body.appendChild(iframe);
+    }
+    el("lightbox").classList.add("show");
+  }
+  el("lightbox-close").onclick = ()=>{ el("lightbox").classList.remove("show"); el("lightbox-body").innerHTML=""; };
+  el("lightbox").addEventListener("click", (e)=>{ if(e.target === el("lightbox")){ el("lightbox").classList.remove("show"); el("lightbox-body").innerHTML=""; } });
 
   // ---------- upload ----------
   el("btn-camera").onclick = ()=> el("input-camera").click();
@@ -1050,7 +1762,7 @@
     if(files.length === 0) return;
     const parentId = currentFolderId();
     for(const file of files){
-      const t = toast(`Uploading: ${file.name}`, null, {sticky:true, progress:true});
+      const t = toast(`Uploading`, null, {sticky:true, progress:true, sub: file.name});
       try{
         const uploaded = await uploadFileWithProgress(file, parentId, (pct)=>{
           if(t._fill) t._fill.style.width = pct + "%";
@@ -1059,16 +1771,39 @@
           state.localThumbs[uploaded.id] = URL.createObjectURL(file);
         }
         t.remove();
-        toast(`${file.name} uploaded ✓`, "success");
+        toast("Uploaded", "success", {sub: file.name});
       } catch(err){
         t.remove();
-        toast(`${file.name} upload failed: ${err.message}`, "error", {sticky:true});
+        toast("Upload failed", "error", {sticky:true, sub: file.name + " — " + err.message});
       }
     }
     loadCurrent();
   }
   el("input-camera").addEventListener("change", (e)=>{ handleFiles(e.target.files); e.target.value = ""; });
   el("input-upload").addEventListener("change", (e)=>{ handleFiles(e.target.files); e.target.value = ""; });
+  el("input-gallery").addEventListener("change", (e)=>{ handleFiles(e.target.files); e.target.value = ""; });
+
+  // ---------- FAB + bottom sheet ----------
+  el("fab-btn").onclick = ()=> el("sheet-add").classList.add("show");
+  el("sheet-add").addEventListener("click", (e)=>{ if(e.target === el("sheet-add")) el("sheet-add").classList.remove("show"); });
+  el("sheet-new-folder").onclick = ()=>{ el("sheet-add").classList.remove("show"); openNewFolderModal(); };
+  el("sheet-camera").onclick = ()=>{ el("sheet-add").classList.remove("show"); el("input-camera").click(); };
+  el("sheet-gallery").onclick = ()=>{ el("sheet-add").classList.remove("show"); el("input-gallery").click(); };
+  el("sheet-upload").onclick = ()=>{ el("sheet-add").classList.remove("show"); el("input-upload").click(); };
+
+  // ---------- user dropdown ----------
+  el("user-chip").onclick = (e)=>{
+    e.stopPropagation();
+    el("user-dropdown").classList.toggle("show");
+  };
+  document.addEventListener("click", ()=> el("user-dropdown").classList.remove("show"));
+  el("dropdown-signout").onclick = (e)=>{
+    e.stopPropagation();
+    state.accessToken = null;
+    state.tokenExpiry = 0;
+    el("user-dropdown").classList.remove("show");
+    showScreen("login");
+  };
 
   // ---------- sign in / out ----------
   async function afterSignIn(){
@@ -1079,9 +1814,16 @@
       try{
         const res = await apiFetch("https://www.googleapis.com/oauth2/v3/userinfo");
         const info = await res.json();
-        el("user-name").textContent = info.name ? info.name.split(" ")[0] : "Sign out";
-        if(info.picture) el("user-avatar").src = info.picture;
+        const firstName = info.name ? info.name.split(" ")[0] : "Account";
+        el("user-name").textContent = firstName;
+        el("dropdown-name").textContent = info.name || "Signed in";
+        el("dropdown-email").textContent = info.email || "";
+        if(info.picture){
+          el("user-avatar").src = info.picture;
+          el("dropdown-avatar").src = info.picture;
+        }
         el("user-avatar").style.display = info.picture ? "block" : "none";
+        el("dropdown-avatar").style.display = info.picture ? "block" : "none";
       } catch(e){
         el("user-avatar").style.display = "none";
       }
@@ -1099,15 +1841,6 @@
     } catch(err){
       toast("Sign-in was cancelled or failed", "error");
     }
-  };
-
-  el("user-chip").onclick = ()=>{
-    state.accessToken = null;
-    state.tokenExpiry = 0;
-    if(window.google && google.accounts && google.accounts.oauth2){
-      // revoke not required for token-based flow; just drop local state
-    }
-    showScreen("login");
   };
 
   // ---------- setup screen ----------
