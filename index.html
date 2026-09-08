@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>কোcourse vault</title>
+<title>course vault</title>
 <meta name="theme-color" content="#121319">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ভান্ডার">
+<meta name="apple-mobile-web-app-title" content="course vault">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
@@ -438,7 +438,7 @@
   // 🔧  কমপক্ষে 512x512 px সাইজের PNG/JPG হলে সবচেয়ে ভালো দেখাবে।
   // 🔧  এটা বসালে ফোনে "Add to Home Screen" করলে এই আইকনটা দেখাবে।
   // 🔧 ============================================================
-  const ICON_URL = "course vault.png";
+  const ICON_URL = "Pcourse vault.png";
 
   (function injectPWAIcons(){
     const head = document.head;
@@ -726,20 +726,25 @@
   }
 
   async function ensureRootFolder(){
+    // Always search Drive first so every device converges on the SAME
+    // folder, even if a locally-cached id is stale or points at a
+    // duplicate created by an older buggy version of this app.
+    try{
+      const found = await driveFindRootFolder();
+      if(found){
+        state.rootFolderId = found;
+        localStorage.setItem(LS_ROOT_ID, found);
+        return found;
+      }
+    } catch(e){ /* search failed (offline/etc) — fall back to cache below */ }
+
     if(state.rootFolderId){
       try{
         const f = await driveGetFile(state.rootFolderId);
         if(f && !f.trashed) return state.rootFolderId;
-      } catch(e){ /* stored id invalid on this account/device, fall through to search */ }
+      } catch(e){ /* cached id invalid too */ }
     }
-    // No usable local id — search Drive itself before creating anything new,
-    // so a second device (or a cleared localStorage) finds the SAME vault.
-    const found = await driveFindRootFolder();
-    if(found){
-      state.rootFolderId = found;
-      localStorage.setItem(LS_ROOT_ID, found);
-      return found;
-    }
+
     const created = await driveCreateFolder(ROOT_FOLDER_NAME, null);
     state.rootFolderId = created.id;
     localStorage.setItem(LS_ROOT_ID, created.id);
