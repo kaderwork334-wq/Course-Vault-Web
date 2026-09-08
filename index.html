@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Course vault</title>
+<title>কোcourse vault</title>
 <meta name="theme-color" content="#121319">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1063,6 +1063,13 @@
   };
 
   // ---------- boot ----------
+  function withTimeout(promise, ms){
+    return Promise.race([
+      promise,
+      new Promise((_, reject)=> setTimeout(()=> reject(new Error("timeout")), ms))
+    ]);
+  }
+
   function boot(){
     waitForGis(async ()=>{
       initTokenClient();
@@ -1070,8 +1077,9 @@
       try{
         // Try to sign in silently first (works if the browser still has an
         // active Google session from before) so a reload doesn't force a
-        // manual sign-in every time.
-        await requestToken(true);
+        // manual sign-in every time. Time-boxed because Google sometimes
+        // never calls back at all (e.g. third-party cookies blocked).
+        await withTimeout(requestToken(true), 4000);
         afterSignIn();
       } catch(e){
         showScreen("login");
