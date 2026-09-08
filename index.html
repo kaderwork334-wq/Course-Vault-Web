@@ -472,6 +472,7 @@
 
   const SCOPES = "https://www.googleapis.com/auth/drive.file";
   const ROOT_FOLDER_NAME = "Course Bhandar";
+  const ROOT_MARKER_KEY = "courseVaultRoot";
   const LS_CLIENT_ID = "cv_client_id";
   const LS_ROOT_ID = "cv_root_folder_id";
   const HARDCODED_CLIENT_ID = "739564885628-jepj8qdtul5rt8pdk34eh1amrltp0ek4.apps.googleusercontent.com";
@@ -641,9 +642,10 @@
     return data.files || [];
   }
 
-  async function driveCreateFolder(name, parentId){
+  async function driveCreateFolder(name, parentId, appProperties){
     const body = {name, mimeType:"application/vnd.google-apps.folder"};
     if(parentId) body.parents = [parentId];
+    if(appProperties) body.appProperties = appProperties;
     const res = await apiFetch("https://www.googleapis.com/drive/v3/files?fields=id,name,mimeType,createdTime", {
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -668,6 +670,19 @@
   async function driveGetFile(id){
     const res = await apiFetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=id,name,trashed`);
     return res.json();
+  }
+
+  // Marks a folder as THE root vault using a hidden appProperties flag.
+  // This survives renames and lets us find the right folder even if
+  // duplicates exist from an older buggy version of this app.
+  async function markAsRoot(id){
+    try{
+      await apiFetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=id`, {
+        method:"PATCH",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({appProperties:{[ROOT_MARKER_KEY]:"true"}}),
+      });
+    } catch(e){ /* non-fatal — will just retry marking next launch */ }
   }
 
   function uploadFileWithProgress(file, parentId, onProgress){
@@ -715,14 +730,47 @@
     });
   }
 
+  // Finds THE root vault folder reliably:
+  //  1) First look for the folder carrying our hidden appProperties marker.
+  //     This is immune to renames and to duplicate folders sharing the same name.
+  //  2) If nothing is marked yet (first run after this fix, or very first
+  //     install), fall back to searching by folder name. If several
+  //     duplicates with that name exist (leftover from an older buggy
+  //     version), pick the one that actually contains the most files —
+  //     NOT simply the oldest one — since an early empty duplicate could
+  //     otherwise keep winning forever.
+  //  3) Whichever folder is chosen gets marked, so every future lookup
+  //     goes straight to step 1 and stays consistent across devices.
   async function driveFindRootFolder(){
-    const q = encodeURIComponent(`name = '${ROOT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
-    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,createdTime)&orderBy=createdTime&pageSize=10`);
-    const data = await res.json();
-    if(data.files && data.files.length){
-      return data.files[0].id; // oldest match — the original vault
+    const markedQ = encodeURIComponent(`mimeType = 'application/vnd.google-apps.folder' and trashed = false and appProperties has { key='${ROOT_MARKER_KEY}' and value='true' }`);
+    const markedRes = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${markedQ}&fields=files(id,name,createdTime)&pageSize=10`);
+    const markedData = await markedRes.json();
+    if(markedData.files && markedData.files.length){
+      return markedData.files[0].id;
     }
-    return null;
+
+    const q = encodeURIComponent(`name = '${ROOT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,createdTime)&orderBy=createdTime&pageSize=25`);
+    const data = await res.json();
+    const candidates = data.files || [];
+    if(candidates.length === 0) return null;
+
+    if(candidates.length === 1){
+      await markAsRoot(candidates[0].id);
+      return candidates[0].id;
+    }
+
+    // Multiple legacy duplicates found — pick the one that actually has
+    // content in it, not just the oldest.
+    let best = candidates[0], bestCount = -1;
+    for(const c of candidates){
+      try{
+        const kids = await driveListChildren(c.id);
+        if(kids.length > bestCount){ bestCount = kids.length; best = c; }
+      } catch(e){ /* ignore this candidate on error */ }
+    }
+    await markAsRoot(best.id);
+    return best.id;
   }
 
   async function ensureRootFolder(){
@@ -745,7 +793,7 @@
       } catch(e){ /* cached id invalid too */ }
     }
 
-    const created = await driveCreateFolder(ROOT_FOLDER_NAME, null);
+    const created = await driveCreateFolder(ROOT_FOLDER_NAME, null, {[ROOT_MARKER_KEY]:"true"});
     state.rootFolderId = created.id;
     localStorage.setItem(LS_ROOT_ID, created.id);
     return created.id;
