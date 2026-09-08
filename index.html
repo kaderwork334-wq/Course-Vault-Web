@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>কোর্স ভান্ডার — তোমার সব কোর্স ম্যাটেরিয়াল এক জায়গায়</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    --bg:#121319;
+    --bg-elev:#1A1C25;
+    --glass:rgba(255,255,255,0.045);
+    --glass-hover:rgba(255,255,255,0.075);
+    --border:rgba(212,168,75,0.16);
+    --border-soft:rgba(255,255,255,0.08);
+    --text:#EDEAE2;
+    --muted:#9B9788;
+    --accent:#D4A84B;
+    --accent-ink:#2A2005;
+    --accent-soft:rgba(212,168,75,0.14);
+    --success:#7FBF8E;
+    --danger:#E0685F;
+    --danger-soft:rgba(224,104,95,0.14);
+    --radius:14px;
+    --radius-sm:9px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(212,168,75,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(212,168,75,0.06), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Hind Siliguri', 'Inter', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent-soft);}
+  button{font-family:inherit;}
+  input{font-family:inherit;}
+
+  /* ---------- layout shells ---------- */
+  .center-shell{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:420px;
+    background:var(--glass);
+    border:1px solid var(--border-soft);
+    border-radius:20px;
+    padding:36px 30px;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .brand-mark{
+    width:40px;height:40px;flex:none;
+    border-radius:10px;
+    background:linear-gradient(155deg, var(--accent), #A87E2E);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand-mark svg{width:22px;height:22px;}
+  .brand-title{
+    font-family:'Tiro Bangla', 'Hind Siliguri', serif;
+    font-size:22px;
+    font-weight:400;
+    letter-spacing:0.2px;
+  }
+  .tagline{color:var(--muted);font-size:14.5px;line-height:1.6;margin:14px 0 26px;}
+
+  .field-label{font-size:13.5px;color:var(--muted);margin-bottom:7px;display:block;}
+  .text-input{
+    width:100%;
+    padding:12px 14px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius-sm);
+    color:var(--text);
+    font-size:15px;
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .text-input:focus{border-color:var(--accent); background:rgba(255,255,255,0.06);}
+  .text-input::placeholder{color:#6B6858;}
+
+  .help-text{font-size:12.5px;color:#736F5E;line-height:1.6;margin-top:10px;}
+  .help-text a{color:var(--accent);text-decoration:none;}
+  .help-text a:hover{text-decoration:underline;}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px 18px;
+    border-radius:var(--radius-sm);
+    border:1px solid transparent;
+    font-size:15px;font-weight:600;
+    cursor:pointer;
+    transition:transform .08s ease, filter .15s ease, background .15s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-primary:disabled{opacity:0.55;cursor:not-allowed;transform:none;}
+  .btn-ghost{background:var(--glass);color:var(--text);border-color:var(--border-soft);}
+  .btn-ghost:hover{background:var(--glass-hover);}
+  .btn-danger{background:var(--danger-soft);color:var(--danger);}
+  .btn-danger:hover{background:rgba(224,104,95,0.22);}
+  .btn-block{width:100%;}
+  .btn-sm{padding:8px 13px;font-size:13.5px;border-radius:8px;}
+
+  .google-btn{
+    width:100%;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    padding:13px 18px;
+    background:#fff;color:#1f1f1f;
+    border-radius:var(--radius-sm);
+    border:none;font-size:15px;font-weight:600;cursor:pointer;
+    transition:filter .15s ease, transform .08s ease;
+  }
+  .google-btn:hover{filter:brightness(0.97);}
+  .google-btn:active{transform:scale(0.98);}
+  .google-btn svg{width:18px;height:18px;}
+
+  .link-btn{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;padding:0;}
+  .link-btn:hover{color:var(--accent);}
+
+  /* ---------- app shell ---------- */
+  #app-screen{display:none;min-height:100vh;flex-direction:column;}
+  header.topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 22px;
+    border-bottom:1px solid var(--border-soft);
+    background:rgba(18,19,25,0.75);
+    backdrop-filter:blur(14px);
+    position:sticky;top:0;z-index:20;
+    gap:12px;
+  }
+  .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;}
+  .topbar-left .brand-mark{width:32px;height:32px;border-radius:8px;}
+  .topbar-left .brand-mark svg{width:17px;height:17px;}
+  .topbar-title{font-family:'Tiro Bangla',serif;font-size:17px;white-space:nowrap;}
+  .topbar-right{display:flex;align-items:center;gap:10px;flex:none;}
+  .user-chip{
+    display:flex;align-items:center;gap:8px;
+    padding:5px 10px 5px 5px;
+    background:var(--glass);border:1px solid var(--border-soft);
+    border-radius:999px;font-size:13px;color:var(--muted);
+    cursor:pointer;
+  }
+  .user-chip img{width:24px;height:24px;border-radius:50%;}
+
+  main.content{flex:1;padding:22px 22px 100px;max-width:1080px;width:100%;margin:0 auto;}
+
+  .breadcrumb{
+    display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+    margin-bottom:20px;font-size:14.5px;
+  }
+  .crumb{color:var(--muted);cursor:pointer;padding:4px 2px;border-radius:6px;}
+  .crumb:hover{color:var(--text);}
+  .crumb.current{color:var(--text);font-weight:600;cursor:default;}
+  .crumb-sep{color:#514E42;}
+
+  .toolbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(148px, 1fr));
+    gap:14px;
+  }
+  .item-card{
+    position:relative;
+    background:var(--glass);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    padding:16px 14px 13px;
+    cursor:pointer;
+    transition:background .15s ease, border-color .15s ease;
+    user-select:none;
+  }
+  .item-card:hover{background:var(--glass-hover);border-color:var(--border);}
+  .item-icon{width:34px;height:34px;margin-bottom:12px;}
+  .item-icon svg{width:100%;height:100%;}
+  .item-name{
+    font-size:14px;font-weight:600;line-height:1.35;
+    word-break:break-word;
+    margin-bottom:6px;
+    padding-right:20px;
+  }
+  .item-meta{font-size:11.5px;color:var(--muted);}
+  .item-menu-btn{
+    position:absolute;top:10px;right:8px;
+    width:26px;height:26px;border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--muted);background:transparent;border:none;cursor:pointer;
+  }
+  .item-menu-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+
+  .popover{
+    position:fixed;
+    background:#1E202A;
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    padding:6px;
+    min-width:150px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.45);
+    z-index:200;
+  }
+  .popover button{
+    width:100%;text-align:right;
+    background:none;border:none;color:var(--text);
+    padding:9px 12px;border-radius:7px;font-size:14px;cursor:pointer;
+    display:flex;align-items:center;gap:8px;
+  }
+  .popover button:hover{background:rgba(255,255,255,0.06);}
+  .popover button.danger{color:var(--danger);}
+
+  .empty-state{
+    text-align:center;padding:70px 20px;color:var(--muted);
+  }
+  .empty-state svg{width:52px;height:52px;margin-bottom:16px;opacity:0.6;}
+  .empty-state h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:19px;color:var(--text);margin:0 0 8px;}
+  .empty-state p{font-size:14px;margin:0;}
+
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(8,8,10,0.6);
+    backdrop-filter:blur(3px);
+    align-items:center;justify-content:center;z-index:300;padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:#191A22;border:1px solid var(--border-soft);
+    border-radius:16px;padding:26px;width:100%;max-width:380px;
+  }
+  .modal h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:19px;margin:0 0 18px;}
+  .modal-actions{display:flex;gap:10px;margin-top:20px;}
+  .modal-actions .btn{flex:1;}
+
+  /* ---------- toast / progress ---------- */
+  #toast-stack{
+    position:fixed;bottom:22px;right:22px;z-index:400;
+    display:flex;flex-direction:column;gap:10px;
+    max-width:320px;width:calc(100% - 44px);
+  }
+  .toast{
+    background:#1E202A;border:1px solid var(--border-soft);
+    border-radius:12px;padding:13px 15px;font-size:13.5px;
+    box-shadow:0 10px 26px rgba(0,0,0,0.4);
+    display:flex;flex-direction:column;gap:6px;
+    animation:toastIn .18s ease;
+  }
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .toast.error{border-color:rgba(224,104,95,0.4);}
+  .toast.success{border-color:rgba(127,191,142,0.35);}
+  .toast-title{font-weight:600;display:flex;justify-content:space-between;gap:10px;}
+  .toast-bar{height:4px;border-radius:2px;background:rgba(255,255,255,0.08);overflow:hidden;}
+  .toast-bar-fill{height:100%;background:var(--accent);width:0%;transition:width .2s ease;}
+
+  .spinner{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(255,255,255,0.25);border-top-color:var(--text);
+    animation:spin .7s linear infinite;flex:none;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .loading-shell{display:flex;align-items:center;justify-content:center;min-height:100vh;color:var(--muted);gap:10px;font-size:14px;}
+
+  input[type=file]{display:none;}
+
+  @media (max-width:480px){
+    .card{padding:28px 20px;}
+    main.content{padding:18px 14px 100px;}
+    .topbar{padding:13px 14px;}
+    .grid{grid-template-columns:repeat(auto-fill, minmax(128px, 1fr));}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOADING ============ -->
+<div id="loading-screen" class="loading-shell">
+  <div class="spinner"></div><span>লোড হচ্ছে…</span>
+</div>
+
+<!-- ============ SETUP SCREEN (first run — needs Google Client ID) ============ -->
+<div id="setup-screen" class="center-shell" style="display:none;">
+  <div class="card">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
+      </div>
+      <div class="topbar-title" style="font-size:22px;">কোর্স ভান্ডার</div>
+    </div>
+    <p class="tagline">প্রথমবার সেটাপ করতে তোমার নিজের Google Cloud OAuth Client ID লাগবে — এটা একবারই দিতে হবে, তোমার ব্রাউজারে সেভ থাকবে।</p>
+    <label class="field-label">Google OAuth Client ID</label>
+    <input id="setup-client-id" class="text-input" placeholder="xxxxxxxxxx.apps.googleusercontent.com" autocomplete="off">
+    <button id="setup-save-btn" class="btn btn-primary btn-block" style="margin-top:16px;">সেভ করে এগিয়ে যাও</button>
+    <p class="help-text">Client ID কোথায় পাবে জানো না? নিচে ধাপে ধাপে গাইড দেওয়া আছে (README দ্রষ্টব্য)। সংক্ষেপে: <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → নতুন প্রজেক্ট → Google Drive API চালু করো → OAuth Client ID (Web application) বানাও → এই পেজের ঠিকানাটা Authorized JavaScript origins-এ যোগ করো।</p>
+  </div>
+</div>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div id="login-screen" class="center-shell" style="display:none;">
+  <div class="card">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
+      </div>
+      <div class="topbar-title" style="font-size:22px;">কোর্স ভান্ডার</div>
+    </div>
+    <p class="tagline">সেমিস্টারের প্রশ্ন, মিড-ফাইনাল, প্রেজেন্টেশন, রিপোর্ট — সব কোর্স অনুযায়ী গুছিয়ে রাখো, নিজের Google Drive-এই জমা থাকবে।</p>
+    <button id="google-signin-btn" class="google-btn">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.4C29.6 35.4 26.9 36.3 24 36.3c-5.2 0-9.6-3.3-11.2-7.9l-6.6 5.1C9.6 39.7 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.6 5.4C41.6 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+      Google দিয়ে সাইন ইন করো
+    </button>
+    <p class="help-text" style="text-align:center;margin-top:16px;">
+      <button class="link-btn" id="change-client-id-link">Client ID পাল্টাতে চাও?</button>
+    </p>
+  </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="app-screen">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7v9l8 4 8-4V7" stroke="#2A2005" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v9" stroke="#2A2005" stroke-width="1.6"/></svg>
+      </div>
+      <div class="topbar-title">কোর্স ভান্ডার</div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip" id="user-chip">
+        <img id="user-avatar" src="" alt="">
+        <span id="user-name">সাইন আউট</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="toolbar">
+      <button class="btn btn-primary" id="btn-new-folder">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span id="new-folder-label">নতুন কোর্স</span>
+      </button>
+      <button class="btn btn-ghost" id="btn-camera">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.3" stroke="currentColor" stroke-width="1.8"/></svg>
+        ক্যামেরা দিয়ে তোলো
+      </button>
+      <button class="btn btn-ghost" id="btn-upload">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        ফাইল আপলোড
+      </button>
+    </div>
+    <div id="grid" class="grid"></div>
+    <div id="empty-state" class="empty-state" style="display:none;"></div>
+  </main>
+</div>
+
+<input type="file" id="input-camera" accept="image/*" capture="environment" multiple>
+<input type="file" id="input-upload" multiple>
+
+<!-- New folder modal -->
+<div class="modal-overlay" id="modal-folder">
+  <div class="modal">
+    <h3 id="folder-modal-title">নতুন কোর্স যোগ করো</h3>
+    <label class="field-label">নাম</label>
+    <input class="text-input" id="folder-name-input" placeholder="যেমনঃ MIS442 অথবা Mid Term">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="folder-cancel">বাতিল</button>
+      <button class="btn btn-primary" id="folder-confirm">তৈরি করো</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rename modal -->
+<div class="modal-overlay" id="modal-rename">
+  <div class="modal">
+    <h3>নাম পরিবর্তন করো</h3>
+    <label class="field-label">নতুন নাম</label>
+    <input class="text-input" id="rename-input" placeholder="নতুন নাম লেখো">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="rename-cancel">বাতিল</button>
+      <button class="btn btn-primary" id="rename-confirm">সেভ করো</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="modal-delete">
+  <div class="modal">
+    <h3 id="delete-title">ডিলিট করবে?</h3>
+    <p style="color:var(--muted);font-size:14px;margin:0 0 4px;" id="delete-body"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="delete-cancel">বাতিল</button>
+      <button class="btn btn-danger" id="delete-confirm">ডিলিট করো</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-stack"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const SCOPES = "https://www.googleapis.com/auth/drive.file";
+  const ROOT_FOLDER_NAME = "Course Bhandar";
+  const LS_CLIENT_ID = "cv_client_id";
+  const LS_ROOT_ID = "cv_root_folder_id";
+  const HARDCODED_CLIENT_ID = "739564885628-jepj8qdtul5rt8pdk34eh1amrltp0ek4.apps.googleusercontent.com";
+
+  const state = {
+    clientId: localStorage.getItem(LS_CLIENT_ID) || HARDCODED_CLIENT_ID,
+    accessToken: null,
+    tokenExpiry: 0,
+    tokenClient: null,
+    user: null,
+    rootFolderId: localStorage.getItem(LS_ROOT_ID) || null,
+    pathStack: [],     // [{id,name}] excluding root; root itself represented separately
+    currentItems: [],
+    openPopover: null,
+    pendingDelete: null,
+  };
+
+  // ---------- element refs ----------
+  const el = (id) => document.getElementById(id);
+  const screens = {
+    loading: el("loading-screen"),
+    setup: el("setup-screen"),
+    login: el("login-screen"),
+    app: el("app-screen"),
+  };
+
+  function showScreen(name){
+    Object.entries(screens).forEach(([k, node])=>{
+      if(!node) return;
+      if(k === "app"){
+        node.style.display = (k===name) ? "flex" : "none";
+      } else {
+        node.style.display = (k===name) ? "flex" : "none";
+      }
+    });
+  }
+
+  // ---------- toast ----------
+  function toast(msg, type, opts){
+    opts = opts || {};
+    const stack = el("toast-stack");
+    const t = document.createElement("div");
+    t.className = "toast" + (type ? " " + type : "");
+    const title = document.createElement("div");
+    title.className = "toast-title";
+    title.innerHTML = `<span>${msg}</span>`;
+    t.appendChild(title);
+    if(opts.progress){
+      const bar = document.createElement("div");
+      bar.className = "toast-bar";
+      const fill = document.createElement("div");
+      fill.className = "toast-bar-fill";
+      bar.appendChild(fill);
+      t.appendChild(bar);
+      t._fill = fill;
+    }
+    stack.appendChild(t);
+    if(!opts.sticky){
+      setTimeout(()=>{ t.remove(); }, opts.duration || 3200);
+    }
+    return t;
+  }
+
+  // ---------- icons ----------
+  const ICONS = {
+    folder: `<svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#D4A84B" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+    image: `<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#9B9788" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.5" stroke="#9B9788" stroke-width="1.4"/><path d="M21 16l-5.5-5.5L9 17" stroke="#9B9788" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+    pdf: `<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#E0685F" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#E0685F" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+    doc: `<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#7FA8E0" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#7FA8E0" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+    slide: `<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#E0A85F" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#E0A85F" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+    generic: `<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#9B9788" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#9B9788" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+  };
+
+  function iconFor(mime, name){
+    if(mime === "application/vnd.google-apps.folder") return ICONS.folder;
+    if(mime && mime.startsWith("image/")) return ICONS.image;
+    if(mime === "application/pdf") return ICONS.pdf;
+    if(mime && (mime.includes("word") || mime.includes("document"))) return ICONS.doc;
+    if(mime && (mime.includes("presentation"))) return ICONS.slide;
+    return ICONS.generic;
+  }
+
+  function fmtBytes(bytes){
+    if(!bytes) return "";
+    const n = parseInt(bytes, 10);
+    if(n < 1024) return n + " B";
+    if(n < 1024*1024) return (n/1024).toFixed(1) + " KB";
+    return (n/1024/1024).toFixed(1) + " MB";
+  }
+  function fmtDate(iso){
+    if(!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleDateString("bn-BD", {day:"numeric", month:"short", year:"numeric"});
+  }
+
+  // ---------- Google Identity / token handling ----------
+  let gisReady = false;
+  let signInResolver = null;
+
+  function waitForGis(cb){
+    if(window.google && google.accounts && google.accounts.oauth2){ cb(); return; }
+    let tries = 0;
+    const iv = setInterval(()=>{
+      tries++;
+      if(window.google && google.accounts && google.accounts.oauth2){
+        clearInterval(iv); cb();
+      } else if(tries > 100){
+        clearInterval(iv);
+        toast("Google লগইন সিস্টেম লোড হতে সমস্যা হচ্ছে, ইন্টারনেট চেক করো ও পেজ রিলোড দাও", "error", {sticky:true});
+      }
+    }, 100);
+  }
+
+  function initTokenClient(){
+    state.tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: state.clientId,
+      scope: SCOPES,
+      callback: (resp)=>{
+        if(resp.error){
+          if(signInResolver) signInResolver.reject(resp);
+          toast("সাইন ইন ব্যর্থ হয়েছে: " + resp.error, "error");
+          return;
+        }
+        state.accessToken = resp.access_token;
+        state.tokenExpiry = Date.now() + (resp.expires_in*1000) - 30000;
+        if(signInResolver) signInResolver.resolve(resp);
+      },
+    });
+  }
+
+  function requestToken(promptEmpty){
+    return new Promise((resolve, reject)=>{
+      signInResolver = {resolve, reject};
+      state.tokenClient.requestAccessToken(promptEmpty ? {prompt:""} : {});
+    });
+  }
+
+  async function ensureToken(){
+    if(state.accessToken && Date.now() < state.tokenExpiry) return;
+    await requestToken(true);
+  }
+
+  async function apiFetch(url, opts){
+    opts = opts || {};
+    await ensureToken();
+    opts.headers = Object.assign({}, opts.headers, {"Authorization": "Bearer " + state.accessToken});
+    let res = await fetch(url, opts);
+    if(res.status === 401){
+      await requestToken(true);
+      opts.headers["Authorization"] = "Bearer " + state.accessToken;
+      res = await fetch(url, opts);
+    }
+    if(!res.ok){
+      const errText = await res.text().catch(()=> "");
+      throw new Error(`Drive API error ${res.status}: ${errText}`);
+    }
+    return res;
+  }
+
+  // ---------- Drive helpers ----------
+  async function driveListChildren(folderId){
+    const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+    const fields = encodeURIComponent("files(id,name,mimeType,createdTime,size,webViewLink)");
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=folder,name&pageSize=200`);
+    const data = await res.json();
+    return data.files || [];
+  }
+
+  async function driveCreateFolder(name, parentId){
+    const body = {name, mimeType:"application/vnd.google-apps.folder"};
+    if(parentId) body.parents = [parentId];
+    const res = await apiFetch("https://www.googleapis.com/drive/v3/files?fields=id,name,mimeType,createdTime", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  }
+
+  async function driveRename(id, newName){
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=id,name`, {
+      method:"PATCH",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({name:newName}),
+    });
+    return res.json();
+  }
+
+  async function driveDelete(id){
+    await apiFetch(`https://www.googleapis.com/drive/v3/files/${id}`, {method:"DELETE"});
+  }
+
+  async function driveGetFile(id){
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files/${id}?fields=id,name,trashed`);
+    return res.json();
+  }
+
+  function uploadFileWithProgress(file, parentId, onProgress){
+    return new Promise(async (resolve, reject)=>{
+      try{
+        await ensureToken();
+        const metadata = {name: file.name, parents:[parentId]};
+        const initRes = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,name,mimeType,size,createdTime", {
+          method:"POST",
+          headers:{
+            "Authorization":"Bearer " + state.accessToken,
+            "Content-Type":"application/json; charset=UTF-8",
+            "X-Upload-Content-Type": file.type || "application/octet-stream",
+            "X-Upload-Content-Length": String(file.size),
+          },
+          body: JSON.stringify(metadata),
+        });
+        if(!initRes.ok){
+          const t = await initRes.text().catch(()=> "");
+          reject(new Error("আপলোড শুরু করা যায়নি: " + t));
+          return;
+        }
+        const location = initRes.headers.get("Location");
+        if(!location){ reject(new Error("আপলোড সেশন তৈরি হয়নি")); return; }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", location, true);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+        xhr.upload.onprogress = (e)=>{
+          if(e.lengthComputable && onProgress) onProgress(Math.round((e.loaded/e.total)*100));
+        };
+        xhr.onload = ()=>{
+          if(xhr.status >= 200 && xhr.status < 300){
+            try{ resolve(JSON.parse(xhr.responseText)); }
+            catch(e){ resolve({name:file.name}); }
+          } else {
+            reject(new Error(`আপলোড ব্যর্থ (${xhr.status})`));
+          }
+        };
+        xhr.onerror = ()=> reject(new Error("নেটওয়ার্ক সমস্যায় আপলোড ব্যর্থ হয়েছে"));
+        xhr.send(file);
+      } catch(err){
+        reject(err);
+      }
+    });
+  }
+
+  async function ensureRootFolder(){
+    if(state.rootFolderId){
+      try{
+        const f = await driveGetFile(state.rootFolderId);
+        if(f && !f.trashed) return state.rootFolderId;
+      } catch(e){ /* fall through to recreate */ }
+    }
+    const created = await driveCreateFolder(ROOT_FOLDER_NAME, null);
+    state.rootFolderId = created.id;
+    localStorage.setItem(LS_ROOT_ID, created.id);
+    return created.id;
+  }
+
+  // ---------- navigation / rendering ----------
+  function currentFolderId(){
+    if(state.pathStack.length === 0) return state.rootFolderId;
+    return state.pathStack[state.pathStack.length-1].id;
+  }
+
+  function renderBreadcrumb(){
+    const bc = el("breadcrumb");
+    bc.innerHTML = "";
+    const home = document.createElement("span");
+    home.className = "crumb" + (state.pathStack.length===0 ? " current" : "");
+    home.textContent = "সব কোর্স";
+    home.onclick = ()=>{ if(state.pathStack.length){ state.pathStack = []; loadCurrent(); } };
+    bc.appendChild(home);
+
+    state.pathStack.forEach((p, idx)=>{
+      const sep = document.createElement("span");
+      sep.className = "crumb-sep";
+      sep.textContent = "›";
+      bc.appendChild(sep);
+
+      const c = document.createElement("span");
+      const isLast = idx === state.pathStack.length - 1;
+      c.className = "crumb" + (isLast ? " current" : "");
+      c.textContent = p.name;
+      if(!isLast){
+        c.onclick = ()=>{ state.pathStack = state.pathStack.slice(0, idx+1); loadCurrent(); };
+      }
+      bc.appendChild(c);
+    });
+
+    el("new-folder-label").textContent = state.pathStack.length === 0 ? "নতুন কোর্স" : "নতুন ফোল্ডার";
+  }
+
+  function closePopover(){
+    if(state.openPopover){ state.openPopover.remove(); state.openPopover = null; }
+  }
+
+  function renderGrid(items){
+    state.currentItems = items;
+    const grid = el("grid");
+    const empty = el("empty-state");
+    grid.innerHTML = "";
+
+    if(items.length === 0){
+      grid.style.display = "none";
+      empty.style.display = "block";
+      const atRoot = state.pathStack.length === 0;
+      empty.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#9B9788" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <h3>${atRoot ? "এখনো কোনো কোর্স যোগ করা হয়নি" : "এই ফোল্ডার এখনো খালি"}</h3>
+        <p>${atRoot ? "উপরের \u201cনতুন কোর্স\u201d বাটনে চাপ দিয়ে শুরু করো" : "ফোল্ডার বানাও অথবা ছবি/ফাইল আপলোড করো"}</p>
+      `;
+      return;
+    }
+    grid.style.display = "grid";
+    empty.style.display = "none";
+
+    items.forEach(item=>{
+      const isFolder = item.mimeType === "application/vnd.google-apps.folder";
+      const card = document.createElement("div");
+      card.className = "item-card";
+
+      const iconWrap = document.createElement("div");
+      iconWrap.className = "item-icon";
+      iconWrap.innerHTML = iconFor(item.mimeType, item.name);
+      card.appendChild(iconWrap);
+
+      const nameEl = document.createElement("div");
+      nameEl.className = "item-name";
+      nameEl.textContent = item.name;
+      card.appendChild(nameEl);
+
+      const metaEl = document.createElement("div");
+      metaEl.className = "item-meta";
+      metaEl.textContent = isFolder ? fmtDate(item.createdTime) : [fmtBytes(item.size), fmtDate(item.createdTime)].filter(Boolean).join(" · ");
+      card.appendChild(metaEl);
+
+      const menuBtn = document.createElement("button");
+      menuBtn.className = "item-menu-btn";
+      menuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="19" r="1.6" fill="currentColor"/></svg>`;
+      menuBtn.onclick = (e)=>{
+        e.stopPropagation();
+        openItemMenu(e.currentTarget, item, isFolder);
+      };
+      card.appendChild(menuBtn);
+
+      card.onclick = ()=>{
+        if(isFolder){
+          state.pathStack.push({id:item.id, name:item.name});
+          loadCurrent();
+        } else if(item.webViewLink){
+          window.open(item.webViewLink, "_blank");
+        }
+      };
+
+      grid.appendChild(card);
+    });
+  }
+
+  function openItemMenu(anchor, item, isFolder){
+    closePopover();
+    const pop = document.createElement("div");
+    pop.className = "popover";
+    const rect = anchor.getBoundingClientRect();
+    pop.style.top = (rect.bottom + 6) + "px";
+    pop.style.left = Math.max(8, rect.right - 150) + "px";
+
+    const renameBtn = document.createElement("button");
+    renameBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10-10-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> নাম বদলাও`;
+    renameBtn.onclick = ()=>{ closePopover(); openRenameModal(item); };
+    pop.appendChild(renameBtn);
+
+    if(!isFolder){
+      const openBtn = document.createElement("button");
+      openBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4L10 14M6 6H5a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Drive-এ খোলো`;
+      openBtn.onclick = ()=>{ closePopover(); window.open(item.webViewLink, "_blank"); };
+      pop.appendChild(openBtn);
+    }
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "danger";
+    delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0v13a1 1 0 001 1h8a1 1 0 001-1V7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg> ডিলিট করো`;
+    delBtn.onclick = ()=>{ closePopover(); openDeleteModal(item, isFolder); };
+    pop.appendChild(delBtn);
+
+    document.body.appendChild(pop);
+    state.openPopover = pop;
+  }
+  document.addEventListener("click", closePopover);
+
+  async function loadCurrent(){
+    renderBreadcrumb();
+    const grid = el("grid");
+    grid.innerHTML = "";
+    el("empty-state").style.display = "none";
+    grid.style.display = "grid";
+    grid.innerHTML = `<div class="loading-shell" style="grid-column:1/-1;min-height:120px;"><div class="spinner"></div><span>লোড হচ্ছে…</span></div>`;
+    try{
+      const items = await driveListChildren(currentFolderId());
+      renderGrid(items);
+    } catch(err){
+      grid.innerHTML = "";
+      toast("তালিকা লোড করতে সমস্যা হয়েছে: " + err.message, "error", {sticky:true});
+    }
+  }
+
+  // ---------- modals: new folder ----------
+  function openNewFolderModal(){
+    el("folder-modal-title").textContent = state.pathStack.length===0 ? "নতুন কোর্স যোগ করো" : "নতুন ফোল্ডার বানাও";
+    el("folder-name-input").value = "";
+    el("modal-folder").classList.add("show");
+    setTimeout(()=> el("folder-name-input").focus(), 50);
+  }
+  function closeNewFolderModal(){ el("modal-folder").classList.remove("show"); }
+
+  el("btn-new-folder").onclick = openNewFolderModal;
+  el("folder-cancel").onclick = closeNewFolderModal;
+  el("folder-name-input").addEventListener("keydown", (e)=>{ if(e.key==="Enter") el("folder-confirm").click(); });
+  el("folder-confirm").onclick = async ()=>{
+    const name = el("folder-name-input").value.trim();
+    if(!name){ toast("একটা নাম দাও", "error"); return; }
+    closeNewFolderModal();
+    const t = toast("ফোল্ডার তৈরি হচ্ছে…", null, {sticky:true});
+    try{
+      await driveCreateFolder(name, currentFolderId());
+      t.remove();
+      toast("তৈরি হয়ে গেছে ✓", "success");
+      loadCurrent();
+    } catch(err){
+      t.remove();
+      toast("ফোল্ডার তৈরি করা যায়নি: " + err.message, "error", {sticky:true});
+    }
+  };
+
+  // ---------- modals: rename ----------
+  function openRenameModal(item){
+    el("rename-input").value = item.name;
+    el("modal-rename").classList.add("show");
+    el("modal-rename")._item = item;
+    setTimeout(()=> el("rename-input").focus(), 50);
+  }
+  el("rename-cancel").onclick = ()=> el("modal-rename").classList.remove("show");
+  el("rename-input").addEventListener("keydown", (e)=>{ if(e.key==="Enter") el("rename-confirm").click(); });
+  el("rename-confirm").onclick = async ()=>{
+    const item = el("modal-rename")._item;
+    const newName = el("rename-input").value.trim();
+    if(!newName){ toast("একটা নাম দাও", "error"); return; }
+    el("modal-rename").classList.remove("show");
+    try{
+      await driveRename(item.id, newName);
+      toast("নাম পরিবর্তন হয়েছে ✓", "success");
+      loadCurrent();
+    } catch(err){
+      toast("নাম বদলানো যায়নি: " + err.message, "error", {sticky:true});
+    }
+  };
+
+  // ---------- modals: delete ----------
+  function openDeleteModal(item, isFolder){
+    el("delete-title").textContent = isFolder ? "ফোল্ডার ডিলিট করবে?" : "ফাইল ডিলিট করবে?";
+    el("delete-body").textContent = `"${item.name}" ${isFolder ? "এবং এর ভিতরের সবকিছু" : ""} ডিলিট হয়ে যাবে (Google Drive-এর ট্র্যাশে যাবে)।`;
+    el("modal-delete").classList.add("show");
+    el("modal-delete")._item = item;
+  }
+  el("delete-cancel").onclick = ()=> el("modal-delete").classList.remove("show");
+  el("delete-confirm").onclick = async ()=>{
+    const item = el("modal-delete")._item;
+    el("modal-delete").classList.remove("show");
+    try{
+      await driveDelete(item.id);
+      toast("ডিলিট করা হয়েছে ✓", "success");
+      loadCurrent();
+    } catch(err){
+      toast("ডিলিট করা যায়নি: " + err.message, "error", {sticky:true});
+    }
+  };
+
+  // ---------- upload ----------
+  el("btn-camera").onclick = ()=> el("input-camera").click();
+  el("btn-upload").onclick = ()=> el("input-upload").click();
+
+  async function handleFiles(fileList){
+    const files = Array.from(fileList || []);
+    if(files.length === 0) return;
+    const parentId = currentFolderId();
+    for(const file of files){
+      const t = toast(`আপলোড হচ্ছে: ${file.name}`, null, {sticky:true, progress:true});
+      try{
+        await uploadFileWithProgress(file, parentId, (pct)=>{
+          if(t._fill) t._fill.style.width = pct + "%";
+        });
+        t.remove();
+        toast(`${file.name} আপলোড হয়ে গেছে ✓`, "success");
+      } catch(err){
+        t.remove();
+        toast(`${file.name} আপলোড ব্যর্থ: ${err.message}`, "error", {sticky:true});
+      }
+    }
+    loadCurrent();
+  }
+  el("input-camera").addEventListener("change", (e)=>{ handleFiles(e.target.files); e.target.value = ""; });
+  el("input-upload").addEventListener("change", (e)=>{ handleFiles(e.target.files); e.target.value = ""; });
+
+  // ---------- sign in / out ----------
+  async function afterSignIn(){
+    showScreen("app");
+    try{
+      await ensureRootFolder();
+      // fetch basic profile
+      try{
+        const res = await apiFetch("https://www.googleapis.com/oauth2/v3/userinfo");
+        const info = await res.json();
+        el("user-name").textContent = info.name ? info.name.split(" ")[0] : "সাইন আউট";
+        if(info.picture) el("user-avatar").src = info.picture;
+        el("user-avatar").style.display = info.picture ? "block" : "none";
+      } catch(e){
+        el("user-avatar").style.display = "none";
+      }
+      state.pathStack = [];
+      loadCurrent();
+    } catch(err){
+      toast("Drive এর সাথে কানেক্ট করতে সমস্যা হয়েছে: " + err.message, "error", {sticky:true});
+    }
+  }
+
+  el("google-signin-btn").onclick = async ()=>{
+    try{
+      await requestToken(false);
+      afterSignIn();
+    } catch(err){
+      toast("সাইন ইন বাতিল বা ব্যর্থ হয়েছে", "error");
+    }
+  };
+
+  el("user-chip").onclick = ()=>{
+    state.accessToken = null;
+    state.tokenExpiry = 0;
+    if(window.google && google.accounts && google.accounts.oauth2){
+      // revoke not required for token-based flow; just drop local state
+    }
+    showScreen("login");
+  };
+
+  // ---------- setup screen ----------
+  el("setup-save-btn").onclick = ()=>{
+    const val = el("setup-client-id").value.trim();
+    if(!val || !val.includes(".apps.googleusercontent.com")){
+      toast("সঠিক Client ID দাও (…apps.googleusercontent.com দিয়ে শেষ হওয়া উচিত)", "error", {sticky:true});
+      return;
+    }
+    localStorage.setItem(LS_CLIENT_ID, val);
+    state.clientId = val;
+    initTokenClient();
+    showScreen("login");
+  };
+
+  el("change-client-id-link").onclick = ()=>{
+    el("setup-client-id").value = state.clientId || "";
+    showScreen("setup");
+  };
+
+  // ---------- boot ----------
+  function boot(){
+    waitForGis(()=>{
+      if(!state.clientId){
+        showScreen("setup");
+      } else {
+        initTokenClient();
+        showScreen("login");
+      }
+    });
+  }
+  boot();
+
+})();
+</script>
+</body>
+</html>
