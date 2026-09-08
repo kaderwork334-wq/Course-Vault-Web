@@ -761,13 +761,22 @@
     }
 
     // Multiple legacy duplicates found — pick the one that actually has
-    // content in it, not just the oldest.
-    let best = candidates[0], bestCount = -1;
+    // content in it, not just the oldest. If we can't check contents at
+    // all (some API call kept failing), default to the MOST RECENTLY
+    // created duplicate rather than the oldest — an old empty test
+    // folder is far more likely to be the oldest one than the real vault.
+    let best = candidates[candidates.length - 1], bestCount = -1, rankingWorked = false;
     for(const c of candidates){
       try{
         const kids = await driveListChildren(c.id);
+        rankingWorked = true;
         if(kids.length > bestCount){ bestCount = kids.length; best = c; }
-      } catch(e){ /* ignore this candidate on error */ }
+      } catch(e){
+        console.warn("course-vault: couldn't check contents of candidate folder", c.id, e);
+      }
+    }
+    if(!rankingWorked){
+      toast("সতর্কতা: একাধিক 'Course Bhandar' ফোল্ডার পাওয়া গেছে কিন্তু কোনটায় কী আছে তা যাচাই করা যায়নি — সাম্প্রতিকতমটা বেছে নেওয়া হয়েছে।", "error", {sticky:true});
     }
     await markAsRoot(best.id);
     return best.id;
@@ -784,7 +793,10 @@
         localStorage.setItem(LS_ROOT_ID, found);
         return found;
       }
-    } catch(e){ /* search failed (offline/etc) — fall back to cache below */ }
+    } catch(e){
+      console.warn("course-vault: driveFindRootFolder failed", e);
+      toast("ভান্ডার খুঁজতে সমস্যা হয়েছে: " + e.message, "error", {sticky:true});
+    }
 
     if(state.rootFolderId){
       try{
