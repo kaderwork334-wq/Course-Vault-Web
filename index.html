@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>কোর্স ভান্ডার — তোমার সব কোর্স ম্যাটেরিয়াল এক জায়গায়</title>
+<title>Course vault</title>
+<meta name="theme-color" content="#121319">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ভান্ডার">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
@@ -193,22 +198,31 @@
     user-select:none;
   }
   .item-card:hover{background:var(--glass-hover);border-color:var(--border);}
-  .item-icon{width:34px;height:34px;margin-bottom:12px;}
-  .item-icon svg{width:100%;height:100%;}
+  .item-thumb{
+    width:100%;height:92px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.03);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .item-thumb svg{width:34px;height:34px;}
+  .item-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .item-name{
     font-size:14px;font-weight:600;line-height:1.35;
     word-break:break-word;
     margin-bottom:6px;
-    padding-right:20px;
   }
   .item-meta{font-size:11.5px;color:var(--muted);}
   .item-menu-btn{
-    position:absolute;top:10px;right:8px;
-    width:26px;height:26px;border-radius:7px;
+    position:absolute;top:9px;right:7px;
+    width:25px;height:25px;border-radius:7px;
     display:flex;align-items:center;justify-content:center;
-    color:var(--muted);background:transparent;border:none;cursor:pointer;
+    color:#fff;background:rgba(10,10,14,0.5);
+    backdrop-filter:blur(3px);
+    border:none;cursor:pointer;
   }
-  .item-menu-btn:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+  .item-menu-btn:hover{background:rgba(10,10,14,0.75);}
 
   .popover{
     position:fixed;
@@ -419,6 +433,43 @@
 (function(){
   "use strict";
 
+  // 🔧 ============================================================
+  // 🔧  এখানে তোমার PWA আইকনের সরাসরি ছবির লিংক (URL) বসাও।
+  // 🔧  কমপক্ষে 512x512 px সাইজের PNG/JPG হলে সবচেয়ে ভালো দেখাবে।
+  // 🔧  এটা বসালে ফোনে "Add to Home Screen" করলে এই আইকনটা দেখাবে।
+  // 🔧 ============================================================
+  const ICON_URL = "course vault.png";
+
+  (function injectPWAIcons(){
+    const head = document.head;
+    function addLink(rel, href, attrs){
+      const l = document.createElement("link");
+      l.rel = rel; l.href = href;
+      if(attrs) Object.entries(attrs).forEach(([k,v])=> l.setAttribute(k,v));
+      head.appendChild(l);
+    }
+    addLink("icon", ICON_URL);
+    addLink("apple-touch-icon", ICON_URL);
+
+    const manifest = {
+      name: "কোর্স ভান্ডার",
+      short_name: "ভান্ডার",
+      description: "সেমিস্টারের সব কোর্স ম্যাটেরিয়াল এক জায়গায়",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#121319",
+      theme_color: "#121319",
+      icons: [
+        {src: ICON_URL, sizes: "192x192", type: "image/png", purpose: "any maskable"},
+        {src: ICON_URL, sizes: "512x512", type: "image/png", purpose: "any maskable"}
+      ]
+    };
+    try{
+      const blob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
+      addLink("manifest", URL.createObjectURL(blob));
+    } catch(e){ /* manifest injection failed silently, icon links still apply */ }
+  })();
+
   const SCOPES = "https://www.googleapis.com/auth/drive.file";
   const ROOT_FOLDER_NAME = "Course Bhandar";
   const LS_CLIENT_ID = "cv_client_id";
@@ -434,6 +485,7 @@
     rootFolderId: localStorage.getItem(LS_ROOT_ID) || null,
     pathStack: [],     // [{id,name}] excluding root; root itself represented separately
     currentItems: [],
+    localThumbs: {},   // fileId -> local blob object URL, for instant preview right after upload
     openPopover: null,
     pendingDelete: null,
   };
@@ -583,7 +635,7 @@
   // ---------- Drive helpers ----------
   async function driveListChildren(folderId){
     const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
-    const fields = encodeURIComponent("files(id,name,mimeType,createdTime,size,webViewLink)");
+    const fields = encodeURIComponent("files(id,name,mimeType,createdTime,size,webViewLink,thumbnailLink)");
     const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=folder,name&pageSize=200`);
     const data = await res.json();
     return data.files || [];
@@ -663,12 +715,30 @@
     });
   }
 
+  async function driveFindRootFolder(){
+    const q = encodeURIComponent(`name = '${ROOT_FOLDER_NAME}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
+    const res = await apiFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,createdTime)&orderBy=createdTime&pageSize=10`);
+    const data = await res.json();
+    if(data.files && data.files.length){
+      return data.files[0].id; // oldest match — the original vault
+    }
+    return null;
+  }
+
   async function ensureRootFolder(){
     if(state.rootFolderId){
       try{
         const f = await driveGetFile(state.rootFolderId);
         if(f && !f.trashed) return state.rootFolderId;
-      } catch(e){ /* fall through to recreate */ }
+      } catch(e){ /* stored id invalid on this account/device, fall through to search */ }
+    }
+    // No usable local id — search Drive itself before creating anything new,
+    // so a second device (or a cleared localStorage) finds the SAME vault.
+    const found = await driveFindRootFolder();
+    if(found){
+      state.rootFolderId = found;
+      localStorage.setItem(LS_ROOT_ID, found);
+      return found;
     }
     const created = await driveCreateFolder(ROOT_FOLDER_NAME, null);
     state.rootFolderId = created.id;
@@ -736,12 +806,23 @@
 
     items.forEach(item=>{
       const isFolder = item.mimeType === "application/vnd.google-apps.folder";
+      const isImage = item.mimeType && item.mimeType.startsWith("image/");
       const card = document.createElement("div");
       card.className = "item-card";
 
       const iconWrap = document.createElement("div");
-      iconWrap.className = "item-icon";
-      iconWrap.innerHTML = iconFor(item.mimeType, item.name);
+      iconWrap.className = "item-thumb";
+      const previewSrc = state.localThumbs[item.id] || (isImage ? item.thumbnailLink : null);
+      if(previewSrc){
+        const img = document.createElement("img");
+        img.src = previewSrc;
+        img.alt = item.name;
+        img.loading = "lazy";
+        img.onerror = ()=>{ iconWrap.innerHTML = iconFor(item.mimeType, item.name); };
+        iconWrap.appendChild(img);
+      } else {
+        iconWrap.innerHTML = iconFor(item.mimeType, item.name);
+      }
       card.appendChild(iconWrap);
 
       const nameEl = document.createElement("div");
@@ -905,9 +986,12 @@
     for(const file of files){
       const t = toast(`আপলোড হচ্ছে: ${file.name}`, null, {sticky:true, progress:true});
       try{
-        await uploadFileWithProgress(file, parentId, (pct)=>{
+        const uploaded = await uploadFileWithProgress(file, parentId, (pct)=>{
           if(t._fill) t._fill.style.width = pct + "%";
         });
+        if(uploaded && uploaded.id && file.type && file.type.startsWith("image/")){
+          state.localThumbs[uploaded.id] = URL.createObjectURL(file);
+        }
         t.remove();
         toast(`${file.name} আপলোড হয়ে গেছে ✓`, "success");
       } catch(err){
@@ -980,11 +1064,16 @@
 
   // ---------- boot ----------
   function boot(){
-    waitForGis(()=>{
-      if(!state.clientId){
-        showScreen("setup");
-      } else {
-        initTokenClient();
+    waitForGis(async ()=>{
+      initTokenClient();
+      showScreen("loading");
+      try{
+        // Try to sign in silently first (works if the browser still has an
+        // active Google session from before) so a reload doesn't force a
+        // manual sign-in every time.
+        await requestToken(true);
+        afterSignIn();
+      } catch(e){
         showScreen("login");
       }
     });
