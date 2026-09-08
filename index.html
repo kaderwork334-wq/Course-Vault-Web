@@ -324,7 +324,7 @@
     <label class="field-label">Google OAuth Client ID</label>
     <input id="setup-client-id" class="text-input" placeholder="xxxxxxxxxx.apps.googleusercontent.com" autocomplete="off">
     <button id="setup-save-btn" class="btn btn-primary btn-block" style="margin-top:16px;">Save and continue</button>
-    <p class="help-text">Don't know where to get a Client ID? A step-by-step guide is available below (see README). In short: <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → create a new project → enable the Google Drive API → create an OAuth Client ID (Web application) → add this page's address to Authorized JavaScript origins.</p>
+    <p class="help-text">Not sure where to get a Client ID? A step-by-step guide is available below (see README). In short: go to <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → create a new project → enable the Google Drive API → create an OAuth Client ID (Web application) → add this page's address to Authorized JavaScript origins.</p>
   </div>
 </div>
 
@@ -337,7 +337,7 @@
       </div>
       <div class="topbar-title" style="font-size:22px;">Course Vault</div>
     </div>
-    <p class="tagline">Keep semester question papers, midterms & finals, presentations, and reports organized by course — all stored right in your own Google Drive.</p>
+    <p class="tagline">Keep your semester's question papers, midterms/finals, presentations, and reports organized by course — all stored safely in your own Google Drive.</p>
     <button id="google-signin-btn" class="google-btn">
       <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.4C29.6 35.4 26.9 36.3 24 36.3c-5.2 0-9.6-3.3-11.2-7.9l-6.6 5.1C9.6 39.7 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.6 5.4C41.6 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
       Sign in with Google
@@ -436,9 +436,10 @@
   // 🔧 ============================================================
   // 🔧  Put the direct image URL for your PWA icon here.
   // 🔧  A PNG/JPG of at least 512x512 px looks best.
-  // 🔧  Once set, this icon will show up when "Add to Home Screen" is used.
+  // 🔧  Setting this makes this icon show up when the app is added
+  // 🔧  to the home screen on a phone.
   // 🔧 ============================================================
-  const ICON_URL = "course vault.png";
+  const ICON_URL = "Pcourse vault.png";
 
   (function injectPWAIcons(){
     const head = document.head;
@@ -454,7 +455,7 @@
     const manifest = {
       name: "Course Vault",
       short_name: "Vault",
-      description: "All your semester course materials in one place",
+      description: "All your semester's course materials in one place",
       start_url: ".",
       display: "standalone",
       background_color: "#121319",
@@ -702,11 +703,11 @@
         });
         if(!initRes.ok){
           const t = await initRes.text().catch(()=> "");
-          reject(new Error("Couldn't start the upload: " + t));
+          reject(new Error("Could not start upload: " + t));
           return;
         }
         const location = initRes.headers.get("Location");
-        if(!location){ reject(new Error("Upload session was not created")); return; }
+        if(!location){ reject(new Error("Upload session could not be created")); return; }
 
         const xhr = new XMLHttpRequest();
         xhr.open("PUT", location, true);
@@ -722,7 +723,7 @@
             reject(new Error(`Upload failed (${xhr.status})`));
           }
         };
-        xhr.onerror = ()=> reject(new Error("Upload failed due to a network problem"));
+        xhr.onerror = ()=> reject(new Error("Upload failed due to a network issue"));
         xhr.send(file);
       } catch(err){
         reject(err);
@@ -776,7 +777,7 @@
       }
     }
     if(!rankingWorked){
-      toast("Warning: multiple 'Course Vault' folders were found, but we couldn't check what's inside each — the most recent one was chosen.", "error", {sticky:true});
+      toast("Warning: multiple 'Course Vault' folders were found, but their contents could not be checked — the most recent one was chosen.", "error", {sticky:true});
     }
     await markAsRoot(best.id);
     return best.id;
@@ -861,7 +862,7 @@
       const atRoot = state.pathStack.length === 0;
       empty.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#9B9788" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <h3>${atRoot ? "No courses added yet" : "This folder is empty"}</h3>
+        <h3>${atRoot ? "No courses added yet" : "This folder is still empty"}</h3>
         <p>${atRoot ? "Tap the \u201cNew Course\u201d button above to get started" : "Create a folder or upload a photo/file"}</p>
       `;
       return;
@@ -965,7 +966,7 @@
       renderGrid(items);
     } catch(err){
       grid.innerHTML = "";
-      toast("Trouble loading the list: " + err.message, "error", {sticky:true});
+      toast("Failed to load the list: " + err.message, "error", {sticky:true});
     }
   }
 
@@ -993,7 +994,7 @@
       loadCurrent();
     } catch(err){
       t.remove();
-      toast("Couldn't create the folder: " + err.message, "error", {sticky:true});
+      toast("Could not create folder: " + err.message, "error", {sticky:true});
     }
   };
 
@@ -1016,14 +1017,14 @@
       toast("Renamed ✓", "success");
       loadCurrent();
     } catch(err){
-      toast("Couldn't rename: " + err.message, "error", {sticky:true});
+      toast("Could not rename: " + err.message, "error", {sticky:true});
     }
   };
 
   // ---------- modals: delete ----------
   function openDeleteModal(item, isFolder){
     el("delete-title").textContent = isFolder ? "Delete folder?" : "Delete file?";
-    el("delete-body").textContent = `"${item.name}" ${isFolder ? "and everything inside it" : ""} will be deleted (moved to Google Drive's trash).`;
+    el("delete-body").textContent = `"${item.name}" ${isFolder ? "and everything inside it " : ""}will be deleted (moved to Google Drive trash).`;
     el("modal-delete").classList.add("show");
     el("modal-delete")._item = item;
   }
@@ -1036,7 +1037,7 @@
       toast("Deleted ✓", "success");
       loadCurrent();
     } catch(err){
-      toast("Couldn't delete: " + err.message, "error", {sticky:true});
+      toast("Could not delete: " + err.message, "error", {sticky:true});
     }
   };
 
@@ -1113,7 +1114,7 @@
   el("setup-save-btn").onclick = ()=>{
     const val = el("setup-client-id").value.trim();
     if(!val || !val.includes(".apps.googleusercontent.com")){
-      toast("Please enter a valid Client ID (should end with …apps.googleusercontent.com)", "error", {sticky:true});
+      toast("Please enter a valid Client ID (it should end with …apps.googleusercontent.com)", "error", {sticky:true});
       return;
     }
     localStorage.setItem(LS_CLIENT_ID, val);
